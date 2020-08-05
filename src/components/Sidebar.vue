@@ -52,51 +52,51 @@
 </template>
 
 <script>
-  import bus from './common/bus'
+import bus from './common/bus'
 
-  export default {
-    data () {
-      return {
-        collapse: false,
-        items: [
-          // {
-          //     icon: 'el-icon-lx-home',
-          //     index: 'dashboard',
-          //     title: '系统首页'
-          // },
-          {
-            icon: 'el-icon-lx-copy',
-            index: 'funManage',
-            title: '功能列表'
-          }
-        ]
-      }
-    },
-    computed: {
-      onRoutes () {
-        return this.$route.path.replace('/', '')
-      }
-    },
-    created () {
-      // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-      bus.$on('collapse', msg => {
-        this.collapse = msg
-        bus.$emit('collapse-content', msg)
-      })
-    },
-    mounted () {
-      bus.$on('funAdd', (name, parent) => {
-          console.log(parent)
-          this.items.push(
-            {
-              icon: 'el-icon-lx-copy',
-              index: 'funManage2',
-              title: name
-            })
+export default {
+  data () {
+    return {
+      collapse: false,
+      items: [
+        // {
+        //     icon: 'el-icon-lx-home',
+        //     index: 'dashboard',
+        //     title: '系统首页'
+        // },
+        {
+          icon: 'el-icon-lx-copy',
+          index: 'funManage',
+          title: '功能列表'
         }
-      )
+      ]
     }
+  },
+  computed: {
+    onRoutes () {
+      return this.$route.path.replace('/', '')
+    }
+  },
+  created () {
+    // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+    bus.$on('collapse', msg => {
+      this.collapse = msg
+      bus.$emit('collapse-content', msg)
+    })
+  },
+  mounted () {
+    bus.$on('funAdd', (name, parent) => {
+      console.log(parent)
+      this.items.push(
+        {
+          icon: 'el-icon-lx-copy',
+          index: 'funManage2',
+          title: name
+        })
+    }
+    )
   }
+}
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
   @import "assets/css/color-dark.css"; /*深色主题*/
 </style>
 <script>
-  export default {
-    name: 'App'
-  }
+export default {
+  name: 'App'
+}
 </script>
