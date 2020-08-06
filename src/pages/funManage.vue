@@ -9,77 +9,84 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button
-          @click="addFun"
-          type="primary"
-        >功能测试
-        </el-button>
-        <el-button
-          @click="delAllSelection"
-          class="handle-del mr10"
-          icon="el-icon-delete"
-          type="primary"
-        >批量删除
-        </el-button>
-        <el-select class="handle-select mr10" placeholder="地址" v-model="query.address">
-          <el-option key="1" label="广东省" value="广东省"></el-option>
-          <el-option key="2" label="湖南省" value="湖南省"></el-option>
-        </el-select>
-        <el-input class="handle-input mr11" placeholder="用户名" v-model="query.name"></el-input>
-        <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
+      <q-btn color="primary" :label="$t('add')" />
       </div>
-      <el-table
-        :data="tableData"
-        @selection-change="handleSelectionChange"
-        border
-        class="table"
-        header-cell-class-name="table-header"
-        ref="multipleTable"
-      >
-        <el-table-column align="center" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="ID" prop="id" width="55"></el-table-column>
-        <el-table-column label="用户名" prop="name"></el-table-column>
-        <el-table-column label="账户余额">
-          <template slot-scope="scope">￥{{scope.row.money}}</template>
-        </el-table-column>
-        <el-table-column align="center" label="头像(查看大图)">
-          <template slot-scope="scope">
-            <el-image
-              :preview-src-list="[scope.row.thumb]"
-              :src="scope.row.thumb"
-              class="table-td-thumb"
-            ></el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="地址" prop="address"></el-table-column>
-        <el-table-column align="center" label="状态">
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-            >{{scope.row.state}}
-            </el-tag>
-          </template>
-        </el-table-column>
+<!--      <div class="handle-box">-->
+<!--        <el-button-->
+<!--          @click="addFun"-->
+<!--          type="primary"-->
+<!--        >功能测试-->
+<!--        </el-button>-->
+<!--        <el-button-->
+<!--          @click="delAllSelection"-->
+<!--          class="handle-del mr10"-->
+<!--          icon="el-icon-delete"-->
+<!--          type="primary"-->
+<!--        >批量删除-->
+<!--        </el-button>-->
+<!--        <el-select class="handle-select mr10" placeholder="地址" v-model="query.address">-->
+<!--          <el-option key="1" label="广东省" value="广东省"></el-option>-->
+<!--          <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
+<!--        </el-select>-->
+<!--        <el-input class="handle-input mr11" placeholder="用户名" v-model="query.name"></el-input>-->
+<!--        <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>-->
+<!--      </div>-->
+<!--      <el-table-->
+<!--        :data="tableData"-->
+<!--        @selection-change="handleSelectionChange"-->
+<!--        border-->
+<!--        class="table"-->
+<!--        header-cell-class-name="table-header"-->
+<!--        ref="multipleTable"-->
+<!--      >-->
+<!--        <el-table-column align="center" type="selection" width="55"></el-table-column>-->
+<!--        <el-table-column align="center" label="ID" prop="id" width="55"></el-table-column>-->
+<!--        <el-table-column label="用户名" prop="name"></el-table-column>-->
+<!--        <el-table-column label="账户余额">-->
+<!--          <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column align="center" label="头像(查看大图)">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-image-->
+<!--              :preview-src-list="[scope.row.thumb]"-->
+<!--              :src="scope.row.thumb"-->
+<!--              class="table-td-thumb"-->
+<!--            ></el-image>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column label="地址" prop="address"></el-table-column>-->
+<!--        <el-table-column align="center" label="状态">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-tag-->
+<!--              :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"-->
+<!--            >{{scope.row.state}}-->
+<!--            </el-tag>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
 
-        <el-table-column label="注册时间" prop="date"></el-table-column>
-        <el-table-column align="center" label="操作" width="180">
-          <template slot-scope="scope">
-            <el-button
-              @click="handleEdit(scope.$index, scope.row)"
-              icon="el-icon-edit"
-              type="text"
-            >编辑
-            </el-button>
-            <el-button
-              @click="handleDelete(scope.$index, scope.row)"
-              class="red"
-              icon="el-icon-delete"
-              type="text"
-            >删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+<!--        <el-table-column label="注册时间" prop="date"></el-table-column>-->
+<!--        <el-table-column align="center" label="操作" width="180">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-button-->
+<!--              @click="handleEdit(scope.$index, scope.row)"-->
+<!--              icon="el-icon-edit"-->
+<!--              type="text"-->
+<!--            >编辑-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--              @click="handleDelete(scope.$index, scope.row)"-->
+<!--              class="red"-->
+<!--              icon="el-icon-delete"-->
+<!--              type="text"-->
+<!--            >删除-->
+<!--            </el-button>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--      </el-table>-->
+      <div></div>
+      <div>
+        <GridManager :option="gridOption" ref="grid"></GridManager>
+      </div>
       <div class="pagination">
         <el-pagination
           :current-page="query.pageIndex"
@@ -113,9 +120,12 @@
 <script>
 // import {fetchData} from '../../api/index';
 import bus from '../components/common/bus'
+import GridManager from 'gridmanager-vue'
+import 'gridmanager-vue/css/gm-vue.css'
+// eslint-disable-next-line no-undef
+// console.log($i18n)
 
 export default {
-  name: 'basetable',
   data () {
     return {
       query: {
@@ -131,21 +141,58 @@ export default {
       pageTotal: 0,
       form: {},
       idx: -1,
-      id: -1
+      id: -1,
+      gridOption: {
+        // 表格唯一標識
+        gridManagerName: 'test-gm',
+
+        // 高度
+        height: '300px',
+
+        // 首次是否載入
+        firstLoading: false,
+
+        // 列配置
+        columnData: [
+          {
+            key: 'funcName',
+            width: '180px',
+            text: this.$t('funcName'),
+            align: 'center'
+          }, {
+            key: 'parentName',
+            width: '180px',
+            text: this.$t('parentFunc'),
+            align: 'center'
+          }, {
+            key: 'action',
+            width: '180px',
+            text: '动作',
+            align: 'center'
+          }
+        ],
+        ajaxData: (settings, params) => {
+        }
+        // ...更多配置請參考API
+      }
     }
+  },
+  components: {
+    GridManager
   },
   created () {
     this.getData()
   },
   methods: {
+
     // 获取 easy-mock 的模拟数据
-    // getData () {
-    //   fetchData(this.query).then(res => {
-    //     console.log(res)
-    //     this.tableData = res.list
-    //     this.pageTotal = res.pageTotal || 50
-    //   })
-    // },
+    getData () {
+      // fetchData(this.query).then(res => {
+      //   console.log(res)
+      //   this.tableData = res.list
+      //   this.pageTotal = res.pageTotal || 50
+      // })
+    },
     // 触发搜索按钮
     handleSearch () {
       this.$set(this.query, 'pageIndex', 1)

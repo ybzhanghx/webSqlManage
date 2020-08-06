@@ -13,10 +13,13 @@ import 'assets/css/icon.css'
 // import 'components/common/directives'
 import 'babel-polyfill'
 
+Vue.use(VueRouter)
 Vue.config.productionTip = false
 Vue.use(ElementUI, {
   size: 'small'
 })
+
+// Vue.use(GridManager)
 
 // Vue.use(VueI18n)
 // const i18n = new VueI18n({
@@ -69,7 +72,7 @@ Router.beforeEach((to, from, next) => {
     }
   }
 })
-Vue.use(VueRouter)
+
 // export default Router
 // }
 export default function (/* { store, ssrContext } */) {

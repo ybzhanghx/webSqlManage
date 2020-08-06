@@ -1,6 +1,6 @@
 <template>
   <!--  <div>后台管理系统-->
-  <q-layout view="lHh Lpr lFf">
+<!--  <q-layout view="lHh Lpr lFf">-->
     <div class="login-wrap">
       <div class="ms-login">
         <div class="ms-title">后台管理系统</div>
@@ -28,7 +28,7 @@
       </div>
     </div>
     <!--  </div>-->
-  </q-layout>
+<!--  </q-layout>-->
 </template>
 
 <script>

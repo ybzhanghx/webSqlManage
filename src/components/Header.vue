@@ -1,4 +1,5 @@
 <template>
+
   <div class="header">
     <!-- 折叠按钮 -->
     <div @click="collapseChage" class="collapse-btn">
@@ -29,7 +30,7 @@
         </div>
         <!-- 用户头像 -->
         <div class="user-avator">
-          <img src="src/assets/img/img.jpg"/>
+          <img src="../assets/img/img.jpg"/>
         </div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown @command="handleCommand" class="user-name" trigger="click">
@@ -47,6 +48,7 @@
       </div>
     </div>
   </div>
+
 </template>
 <script>
 import bus from './common/bus'

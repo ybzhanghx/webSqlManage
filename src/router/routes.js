@@ -1,23 +1,12 @@
 const routes = [
   {
     path: '/',
-    redirect: '/funcManage'
+    redirect: '/funManage'
   },
-  {
-    path: '/login',
-    component: () => import('pages/Login'),
-    // component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        component: () => import('pages/Index.vue')
-      }
-    ],
-    meta: { title: '登录' }
-  },
+
   {
     path: '/',
-    component: () => import('components/Home'),
+    component: () => import('../components/Home'),
     children: [
       {
         path: '/funManage',
@@ -31,17 +20,23 @@ const routes = [
       // },
 
     ]
-  }
+  },
+  {
+    path: '/login',
+    component: () => import('pages/Login'),
+    // component: () => import('layouts/MainLayout.vue'),
+    meta: { title: '登录' }
+  },
   // component: () => import('layouts/MainLayout.vue'),
   // children: [
   //   { path: '', component: () => import('pages/Index.vue') }
 
   // Always leave this as last one,
   // but you can also remove it
-  // {
-  //   path: '*',
-  //   component: () => import('pages/Error404.vue')
-  // }
+  {
+    path: '*',
+    component: () => import('pages/Error404.vue')
+  }
 ]
-
+console.log(routes)
 export default routes

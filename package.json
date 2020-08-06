@@ -14,9 +14,11 @@
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
+    "gridmanager-vue": "^1.6.2",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.20.0",
-    "webpack": "^4.44.1"
+    "webpack": "^4.44.1",
+    "gridmanager": "latest"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",
