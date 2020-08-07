@@ -5,6 +5,9 @@ export default {
   // funcMange
   funcName: '功能名',
   parentFunc: '上层功能',
+  userManage: '用户管理',
+  clientManage: '客户端管理',
+  accountManage: '交易账户管理',
   // User/Login
   Username: '账号',
   Password: '密码',

@@ -9,7 +9,13 @@
     </div>
     <div class="container">
       <div class="handle-box">
-      <q-btn color="primary" :label="$t('add')" />
+        <el-button
+                        @click="addDialog"
+                        icon="el-icon-circle-plus-outline"
+                        type="primary"
+                      >{{$t('add')}}
+                      </el-button>
+<!--      <q-btn color="primary" :label="$t('add')" @click="addFun"/>-->
       </div>
 <!--      <div class="handle-box">-->
 <!--        <el-button-->
@@ -83,35 +89,67 @@
 <!--          </template>-->
 <!--        </el-table-column>-->
 <!--      </el-table>-->
-      <div></div>
+
       <div>
-        <GridManager :option="gridOption" ref="grid"></GridManager>
+        <GridManager :option="gridOption" ref="grid" ></GridManager>
       </div>
-      <div class="pagination">
-        <el-pagination
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-          background
-          layout="total, prev, pager, next"
-        ></el-pagination>
-      </div>
+<!--      <div class="pagination">-->
+<!--        <el-pagination-->
+<!--          :current-page="query.pageIndex"-->
+<!--          :page-size="query.pageSize"-->
+<!--          :total="pageTotal"-->
+<!--          @current-change="handlePageChange"-->
+<!--          background-->
+<!--          layout="total, prev, pager, next"-->
+<!--        ></el-pagination>-->
+<!--      </div>-->
     </div>
 
     <!-- 编辑弹出框 -->
-    <el-dialog :visible.sync="editVisible" title="编辑" width="30%">
-      <el-form :model="form" label-width="70px" ref="form">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
+<!--    <q-dialog v-model="addVisible">-->
+<!--      <q-card style="width:400px;">-->
+<!--      <el-form  label-width="70px" ref="form">-->
+<!--                <el-form-item label="用户名">-->
+<!--&lt;!&ndash;                  <el-input v-model="form.name"></el-input>&ndash;&gt;-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="地址">-->
+<!--&lt;!&ndash;                  <el-input v-model="form.address"></el-input>&ndash;&gt;-->
+<!--                </el-form-item>-->
+<!--              </el-form>-->
+<!--&lt;!&ndash;        <Register />&ndash;&gt;-->
+<!--      </q-card>-->
+<!--    </q-dialog>-->
+
+    <el-dialog :visible.sync="addVisible" title="编辑" width="30%">
+      <el-form  label-width="70px" ref="form">
+        <el-form-item :label="this.$t('funcName')">
+          <el-select v-model="selectValue" placeholder="请选择" value-key="label">
+            <el-option
+              v-for="item in funcList"
+              :key="item.value"
+              :label="item.label"
+              :value="item">
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+        <el-form-item :label="$t('parentFunc')">
+          <el-select v-model="selectParentValue" placeholder="请选择" value-key="label">
+            <el-option
+              v-for="item in parentFuncList"
+              :key="item.value"
+              :label="item.label"
+              :value="item">
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span class="dialog-footer" slot="footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button @click="saveEdit" type="primary">确 定</el-button>
+                <el-button @click="addVisible = false">取 消</el-button>
+                <el-button @click="addFun()" type="primary">确 定</el-button>
             </span>
     </el-dialog>
   </div>
@@ -128,30 +166,30 @@ import 'gridmanager-vue/css/gm-vue.css'
 export default {
   data () {
     return {
-      query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
-        pageSize: 10
+      tableData: {
+        data: [],
+        // {
+        //
+        //   funcName: 'baukh',
+        //   parentName: '25',
+        //   action: '234'
+        // },
+        totals: 0
       },
-      tableData: [],
-      multipleSelection: [],
-      delList: [],
+      selectValue: {},
+      selectParentValue: {},
+      addVisible: false,
       editVisible: false,
-      pageTotal: 0,
-      form: {},
-      idx: -1,
-      id: -1,
+      funcList: [{
+        value: 'clientManage',
+        label: this.$t('clientManage')
+      }],
+      parentFuncList: [],
       gridOption: {
         // 表格唯一標識
         gridManagerName: 'test-gm',
-
-        // 高度
-        height: '300px',
-
-        // 首次是否載入
-        firstLoading: false,
-
+        height: '100%',
+        firstLoading: true,
         // 列配置
         columnData: [
           {
@@ -168,10 +206,17 @@ export default {
             key: 'action',
             width: '180px',
             text: '动作',
-            align: 'center'
+            align: 'center',
+            template: () => {
+              return '<el-button size="mini"  @click="updateRow(row)">编辑 </el-button>' +
+                '<el-button size="mini"  @click="delRow(row)">删除 </el-button>'
+            }
           }
         ],
-        ajaxData: (settings, params) => {
+        supportAjaxPage: true,
+        pageSize: 10,
+        ajaxData: () => {
+          return this.tableData
         }
         // ...更多配置請參考API
       }
@@ -181,71 +226,79 @@ export default {
     GridManager
   },
   created () {
-    this.getData()
+    this.addVisible = false
+    this.parentFuncList = this.funcList.concat({
+      value: '/',
+      label: '/'
+    })
+    // this.parentFuncList = [
+    //   {
+    //     value: 'userMange',
+    //     label: this.$t('userManage')
+    //   },
+    //   {
+    //     value: 'root',
+    //     label: 'none'
+    //   }
+    // ]
+    // this.getData()
   },
   methods: {
-
+    delRow (row) {
+      this.tableData.data = this.tableData.data.filter(
+        ({ funcName }) => funcName !== row.funcName
+      )
+      this.tableData.totals--
+      GridManager.refreshGrid(this.gridOption.gridManagerName)
+      // console.log(row.id)
+      // console.log(row)
+    },
+    updateRow (row) {
+      console.log('555')
+    },
     // 获取 easy-mock 的模拟数据
-    getData () {
-      // fetchData(this.query).then(res => {
-      //   console.log(res)
-      //   this.tableData = res.list
-      //   this.pageTotal = res.pageTotal || 50
-      // })
-    },
-    // 触发搜索按钮
-    handleSearch () {
-      this.$set(this.query, 'pageIndex', 1)
-      this.getData()
-    },
-    // 删除操作
-    // eslint-disable-next-line no-unused-vars
-    handleDelete (index, row) {
-      // 二次确认删除
-      this.$confirm('确定要删除吗？', '提示', {
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-        })
-        .catch(() => {
-        })
-    },
-    // 多选操作
-    handleSelectionChange (val) {
-      this.multipleSelection = val
-    },
-    delAllSelection () {
-      const length = this.multipleSelection.length
-      let str = ''
-      this.delList = this.delList.concat(this.multipleSelection)
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + ' '
-      }
-      this.$message.error(`删除了${str}`)
-      this.multipleSelection = []
+    addDialog () {
+      this.addVisible = true
+      // bus.$emit('funAdd', 'testFiled', 'root')
     },
     addFun () {
-      bus.$emit('funAdd', 'testFiled', 'root')
-    },
-    // 编辑操作
-    handleEdit (index, row) {
-      this.idx = index
-      this.form = row
-      this.editVisible = true
-    },
-    // 保存编辑
-    saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`)
-      this.$set(this.tableData, this.idx, this.form)
-    },
-    // 分页导航
-    handlePageChange (val) {
-      this.$set(this.query, 'pageIndex', val)
-      this.getData()
+      this.tableData.data.push({
+        funcName: this.selectValue.label,
+        parentName: this.selectParentValue.label
+      })
+      this.tableData.totals++
+      this.addVisible = false
+      GridManager.refreshGrid(this.gridOption.gridManagerName)
+      bus.$emit('funAdd', this.selectValue.value, this.selectParentValue.value, this.selectValue.label)
     }
+
+    // 以下方法是必需的
+    // (不要改变它的名称 --> "hide")
+    // hide () {
+    //   this.$refs.dialog.show()
+    // },
+    //
+    // onDialogHide () {
+    //   // QDialog发出“hide”事件时
+    //   // 需要发出
+    //   this.$emit('hide')
+    // },
+    //
+    // onOKClick () {
+    //   // 按OK，在隐藏QDialog之前
+    //   // 发出“ok”事件（带有可选的有效负载）
+    //   // 是必需的
+    //   this.$emit('ok')
+    //   // 或带有有效负载：this.$emit('ok', { ... })
+    //
+    //   // 然后隐藏对话框
+    //   this.show()
+    // },
+    //
+    // onCancelClick () {
+    //   // 我们只需要隐藏对话框
+    //   this.hide()
+    // }
   }
 }
 </script>
@@ -254,7 +307,6 @@ export default {
   .handle-box {
     margin-bottom: 20px;
   }
-
   .handle-select {
     width: 120px;
   }
@@ -266,7 +318,8 @@ export default {
 
   .table {
     width: 100%;
-    font-size: 14px;
+    /*height: 100%;*/
+    /*font-size: 14px;*/
   }
 
   .red {

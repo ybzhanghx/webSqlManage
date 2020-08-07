@@ -12,6 +12,11 @@ const routes = [
         path: '/funManage',
         component: () => import('pages/funManage'),
         meta: { title: '功能管理' }
+      },
+      {
+        path: '/clientManage',
+        component: () => import('pages/funManage'),
+        meta: { title: '功能管理' }
       }
       // {
       //   path: '/funManage2',
@@ -38,5 +43,5 @@ const routes = [
     component: () => import('pages/Error404.vue')
   }
 ]
-console.log(routes)
+
 export default routes

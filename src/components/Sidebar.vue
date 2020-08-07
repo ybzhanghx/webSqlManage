@@ -69,6 +69,11 @@ export default {
           index: 'funManage',
           title: '功能列表'
         }
+        // {
+        //   icon: 'el-icon-lx-copy',
+        //   index: 'clientManage',
+        //   title: '用户列表'
+        // }
       ]
     }
   },
@@ -85,14 +90,15 @@ export default {
     })
   },
   mounted () {
-    bus.$on('funAdd', (name, parent) => {
-      console.log(parent)
-      this.items.push(
-        {
-          icon: 'el-icon-lx-copy',
-          index: 'funManage2',
-          title: name
-        })
+    bus.$on('funAdd', (node, parent, nodeName) => {
+      if (parent === '/') {
+        this.items.push(
+          {
+            icon: 'el-icon-lx-copy',
+            index: node,
+            title: nodeName
+          })
+      }
     }
     )
   }
