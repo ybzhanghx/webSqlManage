@@ -15,7 +15,7 @@ const routes = [
       },
       {
         path: '/clientManage',
-        component: () => import('pages/funManage'),
+        component: () => import('pages/clientManage'),
         meta: { title: '功能管理' }
       }
       // {
