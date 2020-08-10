@@ -153,7 +153,7 @@
             </span>
     </el-dialog>
 
-    <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="1000">
+    <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="50">
 
       <jsonE  v-bind:value="tableConfig" @changed="getEditValue"  ></jsonE>
       <span class="dialog-footer" slot="footer">
@@ -361,25 +361,4 @@ export default {
     height: 40px;
   }
 
-</style>
-<style lang="scss" scoped>
-  .json-editor {
-    height: 100%;
-    position: relative;
-
-    ::v-deep {
-      .CodeMirror {
-        height: auto;
-        min-height: 300px;
-      }
-
-      .CodeMirror-scroll {
-        min-height: 300px;
-      }
-
-      .cm-s-rubyblue span.cm-string {
-        color: #F08047;
-      }
-    }
-  }
 </style>

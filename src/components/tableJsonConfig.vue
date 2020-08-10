@@ -67,6 +67,7 @@ export default {
     .CodeMirror {
       height: auto;
       min-height: 300px;
+      z-index: 1500;
     }
 
     .CodeMirror-scroll {
