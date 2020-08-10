@@ -120,7 +120,7 @@
 <!--      </q-card>-->
 <!--    </q-dialog>-->
 
-    <el-dialog :visible.sync="addVisible" title="编辑" width="30%">
+    <el-dialog :visible.sync="addVisible" title="增加" width="30%">
       <el-form  label-width="70px" ref="form">
         <el-form-item :label="this.$t('funcName')">
           <el-select v-model="selectValue" placeholder="请选择" value-key="label">
@@ -152,6 +152,15 @@
                 <el-button @click="addFun()" type="primary">确 定</el-button>
             </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="1000">
+
+      <jsonE  v-bind:value="tableConfig" @changed="getEditValue"  ></jsonE>
+      <span class="dialog-footer" slot="footer">
+                <el-button @click="resetSourceConfig() ">取 消</el-button>
+                <el-button @click="saveConfig()" type="primary">确 定</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -160,6 +169,7 @@
 import bus from '../components/common/bus'
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
+import jsonE from '../components/tableJsonConfig'
 // eslint-disable-next-line no-undef
 // console.log($i18n)
 
@@ -168,14 +178,13 @@ export default {
     return {
       tableData: {
         data: [],
-        // {
-        //
-        //   funcName: 'baukh',
-        //   parentName: '25',
-        //   action: '234'
-        // },
         totals: 0
       },
+      tableConfig: {
+        tt: 2,
+        bb: 3
+      },
+      tmpConfigValue: this.tableConfig,
       selectValue: {},
       selectParentValue: {},
       addVisible: false,
@@ -223,7 +232,8 @@ export default {
     }
   },
   components: {
-    GridManager
+    GridManager,
+    jsonE
   },
   created () {
     this.addVisible = false
@@ -244,6 +254,20 @@ export default {
     // this.getData()
   },
   methods: {
+    saveConfig () {
+      console.log('save:')
+      this.tmpConfigValue = this.tableConfig
+      this.editVisible = false
+    },
+    resetSourceConfig () {
+      console.log('reset:' + this.tmpConfigValue)
+      this.tableConfig = JSON.parse(this.tmpConfigValue)
+      this.editVisible = false
+    },
+    getEditValue (newValue) {
+      // console.log(newValue)
+      this.tableConfig = newValue
+    },
     delRow (row) {
       this.tableData.data = this.tableData.data.filter(
         ({ funcName }) => funcName !== row.funcName
@@ -254,7 +278,7 @@ export default {
       // console.log(row)
     },
     updateRow (row) {
-      console.log('555')
+      this.editVisible = true
     },
     // 获取 easy-mock 的模拟数据
     addDialog () {
@@ -335,5 +359,27 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+  }
+
+</style>
+<style lang="scss" scoped>
+  .json-editor {
+    height: 100%;
+    position: relative;
+
+    ::v-deep {
+      .CodeMirror {
+        height: auto;
+        min-height: 300px;
+      }
+
+      .CodeMirror-scroll {
+        min-height: 300px;
+      }
+
+      .cm-s-rubyblue span.cm-string {
+        color: #F08047;
+      }
+    }
   }
 </style>
