@@ -20,10 +20,7 @@
 import bus from '../components/common/bus'
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
-// eslint-disable-next-line no-unused-vars
-// import ajax from '../boot/axios'
-// eslint-disable-next-line no-undef
-// console.log($i18n)
+import { getTradeAccountData } from '../api/api'
 
 export default {
   data () {
@@ -52,18 +49,16 @@ export default {
   created () {
     var tmpp = this
     this.gridOption = {
-      // 表格唯一標識
       gridManagerName: 'client-Table',
       height: '100%',
       firstLoading: true,
-      // 列配置
       pageSize: 10,
       columnData: this.ParseColData(),
       supportAjaxPage: true,
       ajaxData: function (settings, params) {
-        return tmpp.newData2(params.cPage, params.pSize)
+        return tmpp.newData(params.cPage, params.pSize)
       }
-      // ...更多配置請參考API
+
     }
   },
   methods: {
@@ -77,29 +72,20 @@ export default {
         }
       )
     },
-    newData () {
-      var tmp = { data: [], totals: 0 }
-      this.newData2().then(function (result) {
-        console.log(result)
-        tmp = result
-      })
-      return tmp
-    },
-    async newData2 (page, size) {
-      var tmp = {}
-      var baseUrl = 'http://localhost:8095/manage/user/list'
 
-      baseUrl += '?page=' + page + '&size=' + size
-      console.log(baseUrl)
-      await this.$axios.get(baseUrl).then(
+    async newData (page_, size_) {
+      const paramData = {
+        page: page_,
+        size: size_
+      }
+      var tmp = {}
+      await getTradeAccountData(paramData).then(
         (response) => {
           const getData = response.data
           if (getData.Code !== 0) {
             return
           }
-          console.log(getData)
           const userList = getData.User
-          // tmp.data = userList
           const funcValidStr = (obj) => { return obj.valid ? obj.String : '' }
           const funcValidTime = (obj) => { return obj.valid ? obj.Time : '' }
           tmp.data = userList.map(
@@ -118,14 +104,7 @@ export default {
           tmp.totals = 100
         }
       )
-
       return tmp
-      // ajax.get('/timeserver?timeZone=8')
-      //   .then((response) => {
-      //     // let data = response.data
-      //     console.log(response.data)
-      //   })
-      //
     },
     updateRow (row) {
       console.log('555')
@@ -133,7 +112,6 @@ export default {
     // 获取 easy-mock 的模拟数据
     addDialog () {
       this.addVisible = true
-      // bus.$emit('funAdd', 'testFiled', 'root')
     },
     addFun () {
       this.tableData.data.push({
@@ -146,33 +124,6 @@ export default {
       bus.$emit('funAdd', this.selectValue.value, this.selectParentValue.value, this.selectValue.label)
     }
 
-    // 以下方法是必需的
-    // (不要改变它的名称 --> "hide")
-    // hide () {
-    //   this.$refs.dialog.show()
-    // },
-    //
-    // onDialogHide () {
-    //   // QDialog发出“hide”事件时
-    //   // 需要发出
-    //   this.$emit('hide')
-    // },
-    //
-    // onOKClick () {
-    //   // 按OK，在隐藏QDialog之前
-    //   // 发出“ok”事件（带有可选的有效负载）
-    //   // 是必需的
-    //   this.$emit('ok')
-    //   // 或带有有效负载：this.$emit('ok', { ... })
-    //
-    //   // 然后隐藏对话框
-    //   this.show()
-    // },
-    //
-    // onCancelClick () {
-    //   // 我们只需要隐藏对话框
-    //   this.hide()
-    // }
   }
 }
 </script>
