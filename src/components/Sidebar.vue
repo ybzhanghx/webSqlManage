@@ -53,31 +53,31 @@
 
 <script>
 import bus from './common/bus'
-
+const baseItems = [
+  {
+    icon: 'el-icon-lx-copy',
+    index: 'funManage',
+    title: '功能列表'
+  }
+]
 export default {
   data () {
     return {
-      collapse: false,
-      items: [
-        // {
-        //     icon: 'el-icon-lx-home',
-        //     index: 'dashboard',
-        //     title: '系统首页'
-        // },
-        {
-          icon: 'el-icon-lx-copy',
-          index: 'funManage',
-          title: '功能列表'
-        }
-        // {
-        //   icon: 'el-icon-lx-copy',
-        //   index: 'clientManage',
-        //   title: '用户列表'
-        // }
-      ]
+      collapse: false
     }
   },
   computed: {
+    items: function () {
+      const getTree = this.$store.getters.getState
+      const tmp = getTree.child.map(node => {
+        return {
+          icon: 'el-icon-lx-copy',
+          index: node.key,
+          title: node.Name
+        }
+      })
+      return baseItems.concat(tmp)
+    },
     onRoutes () {
       return this.$route.path.replace('/', '')
     }
@@ -88,19 +88,6 @@ export default {
       this.collapse = msg
       bus.$emit('collapse-content', msg)
     })
-  },
-  mounted () {
-    bus.$on('funAdd', (node, parent, nodeName) => {
-      if (parent === '/') {
-        this.items.push(
-          {
-            icon: 'el-icon-lx-copy',
-            index: node,
-            title: nodeName
-          })
-      }
-    }
-    )
   }
 }
 </script>

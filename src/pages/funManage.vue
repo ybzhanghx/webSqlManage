@@ -128,19 +128,21 @@
               v-for="item in funcList"
               :key="item.value"
               :label="item.label"
-              :value="item">
+              :value="item"
+              :disabled="item.disabled">
               <span style="float: left">{{ item.label }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('parentFunc')">
-          <el-select v-model="selectParentValue" placeholder="请选择" value-key="label">
+          <el-select v-model="selectParentValue"  :disabled="isDisableParentSelect" placeholder="请选择" value-key="label">
             <el-option
               v-for="item in parentFuncList"
               :key="item.value"
               :label="item.label"
-              :value="item">
+              :value="item"
+              :disabled="item.disabled">
               <span style="float: left">{{ item.label }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
             </el-option>
@@ -166,20 +168,14 @@
 
 <script>
 // import {fetchData} from '../../api/index';
-import bus from '../components/common/bus'
+// import bus from '../components/common/bus'
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
-// eslint-disable-next-line no-undef
-// console.log($i18n)
 
 export default {
   data () {
     return {
-      tableData: {
-        data: [],
-        totals: 0
-      },
       tableConfig: {
         tt: 2,
         bb: 3
@@ -189,11 +185,6 @@ export default {
       selectParentValue: {},
       addVisible: false,
       editVisible: false,
-      funcList: [{
-        value: 'clientManage',
-        label: this.$t('clientManage')
-      }],
-      parentFuncList: [],
       gridOption: {
         // 表格唯一標識
         gridManagerName: 'test-gm',
@@ -225,7 +216,7 @@ export default {
         supportAjaxPage: true,
         pageSize: 10,
         ajaxData: () => {
-          return this.tableData
+          return this.setTableData()
         }
         // ...更多配置請參考API
       }
@@ -235,25 +226,66 @@ export default {
     GridManager,
     jsonE
   },
+
   created () {
     this.addVisible = false
-    this.parentFuncList = this.funcList.concat({
-      value: '/',
-      label: '/'
-    })
-    // this.parentFuncList = [
-    //   {
-    //     value: 'userMange',
-    //     label: this.$t('userManage')
-    //   },
-    //   {
-    //     value: 'root',
-    //     label: 'none'
-    //   }
-    // ]
-    // this.getData()
+    // this.parentFuncList = this.funcList.concat({
+    //   value: '/',
+    //   label: '/'
+    // })
   },
+  computed: {
+    tableData: function () {
+      const getTree = this.$store.getters.getState
+      const tmpData = getTree.child.map(itemValue => {
+        return {
+          funcKey: itemValue.key,
+          parentFunKey: '/',
+          funcName: itemValue.Name,
+          parentName: '/'
+        }
+      })
+      return { data: tmpData, totals: tmpData.length }
+    },
+    funcList: function () {
+      var baseList = [{
+        value: 'clientManage',
+        label: this.$t('clientManage'),
+        disabled: false
+      }]
+
+      const getTree = this.$store.getters.getState
+      getTree.child.map(item => {
+        const index = baseList.findIndex(element => element.value === item.key)
+        if (index !== -1) {
+          baseList[index].disabled = true
+        }
+      })
+      return baseList
+    },
+    parentFuncList: function () {
+      const parentFuncLists = this.funcList.concat({
+        value: '/',
+        label: '/'
+      })
+      console.log(parentFuncLists)
+      const index = parentFuncLists.findIndex(element => element.value === this.selectValue.value)
+      if (index !== -1) {
+        parentFuncLists[index].disabled = true
+      }
+      return parentFuncLists
+    },
+    isDisableParentSelect: function () {
+      return Object.keys(this.selectValue).length === 0
+    }
+  },
+
   methods: {
+    async Getcomple () {
+      await setTimeout(function () {
+      }, 1)
+      return this.tableData
+    },
     saveConfig () {
       console.log('save:')
       this.tmpConfigValue = this.tableConfig
@@ -265,17 +297,14 @@ export default {
       this.editVisible = false
     },
     getEditValue (newValue) {
-      // console.log(newValue)
       this.tableConfig = newValue
     },
     delRow (row) {
-      this.tableData.data = this.tableData.data.filter(
+      const tmp = this.tableData
+      tmp.data = tmp.data.filter(
         ({ funcName }) => funcName !== row.funcName
       )
-      this.tableData.totals--
-      GridManager.refreshGrid(this.gridOption.gridManagerName)
-      // console.log(row.id)
-      // console.log(row)
+      this.updateVuexTable(tmp)
     },
     updateRow (row) {
       this.editVisible = true
@@ -283,17 +312,30 @@ export default {
     // 获取 easy-mock 的模拟数据
     addDialog () {
       this.addVisible = true
-      // bus.$emit('funAdd', 'testFiled', 'root')
+    },
+    async setTableData () {
+      return this.tableData
     },
     addFun () {
-      this.tableData.data.push({
+      this.selectValue.disabled = true
+      const tmp = this.tableData
+      tmp.data.push({
+        funcKey: this.selectValue.value,
+        parentFunKey: this.selectParentValue.value,
         funcName: this.selectValue.label,
         parentName: this.selectParentValue.label
       })
-      this.tableData.totals++
+      this.updateVuexTable(tmp)
       this.addVisible = false
+    },
+    updateVuexTable (tmpTableData) {
+      const commitData = tmpTableData.data.map(item => {
+        return { key: item.funcKey, Name: item.funcName }
+      })
+      console.log('ok')
+      this.$store.commit({ type: 'update', newState: commitData })
+      console.log(this.tableData)
       GridManager.refreshGrid(this.gridOption.gridManagerName)
-      bus.$emit('funAdd', this.selectValue.value, this.selectParentValue.value, this.selectValue.label)
     }
 
     // 以下方法是必需的

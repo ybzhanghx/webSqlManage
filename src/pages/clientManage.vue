@@ -17,7 +17,6 @@
 
 <script>
 // import {fetchData} from '../../api/index';
-import bus from '../components/common/bus'
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import { getTradeAccountData } from '../api/api'
@@ -109,7 +108,7 @@ export default {
     updateRow (row) {
       console.log('555')
     },
-    // 获取 easy-mock 的模拟数据
+
     addDialog () {
       this.addVisible = true
     },
@@ -121,7 +120,6 @@ export default {
       this.tableData.totals++
       this.addVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
-      bus.$emit('funAdd', this.selectValue.value, this.selectParentValue.value, this.selectValue.label)
     }
 
   }

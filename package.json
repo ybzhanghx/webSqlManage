@@ -24,7 +24,8 @@
     "jsonlint": "^1.6.3",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.20.0",
-    "webpack": "^4.44.1"
+    "webpack": "^4.44.1",
+    "vuex": "latest"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",
