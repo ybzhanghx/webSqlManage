@@ -79,8 +79,8 @@ export default {
       }
       var tmp = {}
       await getTradeAccountData(paramData).then(
-        (response) => {
-          const getData = response.data
+        (responseData) => {
+          const getData = responseData
           if (getData.Code !== 0) {
             return
           }

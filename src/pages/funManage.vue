@@ -157,7 +157,7 @@
 
     <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="50">
 
-      <jsonE  v-bind:value="tableConfig" @changed="getEditValue"  ></jsonE>
+      <jsonE  v-bind:value="tableConfigJsonStr" @changed="getEditValue"  ></jsonE>
       <span class="dialog-footer" slot="footer">
                 <el-button @click="resetSourceConfig() ">取 消</el-button>
                 <el-button @click="saveConfig()" type="primary">确 定</el-button>
@@ -172,6 +172,7 @@
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
+import { getTableConfig } from '../api/api'
 
 export default {
   data () {
@@ -180,7 +181,8 @@ export default {
         tt: 2,
         bb: 3
       },
-      tmpConfigValue: this.tableConfig,
+      tableConfigJsonStr: '',
+      tmpConfigValue: '',
       selectValue: {},
       selectParentValue: {},
       addVisible: false,
@@ -229,10 +231,7 @@ export default {
 
   created () {
     this.addVisible = false
-    // this.parentFuncList = this.funcList.concat({
-    //   value: '/',
-    //   label: '/'
-    // })
+    this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
   },
   computed: {
     tableData: function () {
@@ -268,7 +267,6 @@ export default {
         value: '/',
         label: '/'
       })
-      console.log(parentFuncLists)
       const index = parentFuncLists.findIndex(element => element.value === this.selectValue.value)
       if (index !== -1) {
         parentFuncLists[index].disabled = true
@@ -281,23 +279,25 @@ export default {
   },
 
   methods: {
-    async Getcomple () {
-      await setTimeout(function () {
-      }, 1)
-      return this.tableData
-    },
     saveConfig () {
-      console.log('save:')
-      this.tmpConfigValue = this.tableConfig
+      var parsedObject
+      try {
+        parsedObject = JSON.parse(this.tableConfigJsonStr)
+      } catch (e) {
+        this.$message.error('json格式错误')
+        return
+      }
+      console.log('233')
+      this.tmpConfigValue = this.tableConfigJsonStr
+      this.tableConfig = parsedObject
       this.editVisible = false
     },
     resetSourceConfig () {
-      console.log('reset:' + this.tmpConfigValue)
-      this.tableConfig = JSON.parse(this.tmpConfigValue)
+      this.tableConfigJsonStr = this.tmpConfigValue
       this.editVisible = false
     },
     getEditValue (newValue) {
-      this.tableConfig = newValue
+      this.tableConfigJsonStr = newValue
     },
     delRow (row) {
       const tmp = this.tableData
@@ -306,7 +306,19 @@ export default {
       )
       this.updateVuexTable(tmp)
     },
-    updateRow (row) {
+    async updateRow (row) {
+      // console.log(row)
+      this.tableConfig = {}
+      try {
+        const res = await getTableConfig({ funcName: 'test' })
+        if (res.Code === 0) {
+          this.tableConfig = res.Data
+        }
+      } catch (e) {
+        console.log(e)
+      }
+      this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
+      this.tmpConfigValue = this.tableConfigJsonStr
       this.editVisible = true
     },
     // 获取 easy-mock 的模拟数据

@@ -21,11 +21,12 @@ const fetch = async (url = '', data = {}, type = 'GET') => {
     url: url,
     method: type,
     headers: {
-      Accept: 'application / json',
-      'Content-Type': 'application/json'
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
     },
-    responseType: 'json',
-    withCredentials: true,
+    // responseType: 'json',
+    // withCredentials: true,
     data: data
   })
 

@@ -77,6 +77,17 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
+      // host: '192.168.10.18',
+      // proxy: {
+      //   // 将所有以/api开头的请求代理到jsonplaceholder
+      //   '/api': {
+      //     target: 'http://localhost:8095',
+      //     changeOrigin: true,
+      //     pathRewrite: {
+      //       '^/api': ''
+      //     }
+      //   }
+      // },
       https: false,
       port: 8089,
       open: true // opens browser window automatically
