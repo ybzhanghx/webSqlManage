@@ -155,7 +155,7 @@
             </span>
     </el-dialog>
 
-    <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="50">
+    <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="50" height="75%">
 
       <jsonE  v-bind:value="tableConfigJsonStr" @changed="getEditValue"  ></jsonE>
       <span class="dialog-footer" slot="footer">
@@ -300,7 +300,6 @@ export default {
         this.$message.error('json格式错误')
         return
       }
-      console.log('233')
       this.tmpConfigValue = this.tableConfigJsonStr
       this.tableConfig = parsedObject
       this.editVisible = false
@@ -323,9 +322,12 @@ export default {
       // console.log(row)
       this.tableConfig = {}
       try {
-        const res = await getTableConfig({ funcName: 'test' })
+        const res = await getTableConfig({ funcName: row.funcKey })
+        console.log(row.funcKey)
         if (res.Code === 0) {
           this.tableConfig = res.Data
+        } else {
+          console.log(res.msg)
         }
       } catch (e) {
         console.log(e)
@@ -426,6 +428,11 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+  }
+
+  .jsonEditorSetd {
+    width: 75%;
+    height: 100px;
   }
 
 </style>

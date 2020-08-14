@@ -42,8 +42,11 @@ export default {
       mode: 'application/json',
       gutters: ['CodeMirror-lint-markers'],
       theme: 'rubyblue',
-      lint: true
+      scrollbarStyle: 'native',
+      lint: true,
+      height: 'auto'
     })
+    this.jsonEditor.setSize('auto', '500px')
 
     this.jsonEditor.setValue(this.value)
     this.jsonEditor.on('change', cm => {

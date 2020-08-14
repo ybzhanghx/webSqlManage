@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 客户管理
+          <i class="el-icon-lx-cascades"></i> {{ tableName}}
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -24,6 +24,7 @@ import { getTradeAccountData } from '../api/api'
 export default {
   data () {
     return {
+      tableName: '表管理',
       tableData: {
         data: [],
         totals: 0
