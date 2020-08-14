@@ -172,7 +172,7 @@
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
-import { getTableConfig } from '../api/api'
+import { getTableConfig, getTableNames } from '../api/api'
 
 export default {
   data () {
@@ -181,6 +181,11 @@ export default {
         tt: 2,
         bb: 3
       },
+      baseList: [{
+        value: 'clientManage',
+        label: this.$t('clientManage'),
+        disabled: false
+      }],
       tableConfigJsonStr: '',
       tmpConfigValue: '',
       selectValue: {},
@@ -232,6 +237,18 @@ export default {
   created () {
     this.addVisible = false
     this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
+    getTableNames({ db: 'TradeFxDB' }).then(responseData => {
+      console.log(responseData)
+      const tmp = responseData.Data.map(item => {
+        return {
+          value: item,
+          label: item,
+          disabled: false
+        }
+      })
+      this.baseList.push(...tmp)
+    }
+    )
   },
   computed: {
     tableData: function () {
@@ -247,20 +264,16 @@ export default {
       return { data: tmpData, totals: tmpData.length }
     },
     funcList: function () {
-      var baseList = [{
-        value: 'clientManage',
-        label: this.$t('clientManage'),
-        disabled: false
-      }]
-
       const getTree = this.$store.getters.getState
+      // 去除已选的
+      const tmpList = this.baseList
       getTree.child.map(item => {
-        const index = baseList.findIndex(element => element.value === item.key)
+        const index = tmpList.findIndex(element => element.value === item.key)
         if (index !== -1) {
-          baseList[index].disabled = true
+          tmpList[index].disabled = true
         }
       })
-      return baseList
+      return tmpList
     },
     parentFuncList: function () {
       const parentFuncLists = this.funcList.concat({
