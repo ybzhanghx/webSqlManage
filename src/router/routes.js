@@ -36,6 +36,11 @@ export default async function setroute () {
           meta: { title: '功能管理' }
         },
         {
+          path: '/test',
+          component: () => import('pages/tableManage'),
+          meta: { title: '测试' }
+        },
+        {
           path: '/clientManage',
           component: () => import('pages/clientManage'),
           meta: { title: '客户端管理' }

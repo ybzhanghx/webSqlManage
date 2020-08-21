@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css' // 默认主题
 import 'assets/css/icon.css'
 // import 'components/common/directives'
 import 'babel-polyfill'
-
+// import 'default-passive-events'
 // "async" is optional;
 // more info on params: https://quasar.dev/quasar-cli/cli-documentation/boot-files#Anatomy-of-a-boot-file
 export default async ({ app, router, Vue }) => {

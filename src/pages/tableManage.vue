@@ -7,9 +7,9 @@
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="container">
-      <div>
-        <GridManager :option="gridOption" ref="clientGrid" ></GridManager>
+    <div class="container" >
+      <div  v-if="isLoadGrid">
+        <GridManager :option="gridOption" ref="tableGrid"></GridManager>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
 // import {fetchData} from '../../api/index';
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
-import { getTradeAccountData } from '../api/api'
+import { getTableConfig, getTableDataList } from '../api/api'
 
 export default {
   data () {
@@ -39,6 +39,7 @@ export default {
         value: 'clientManage',
         label: this.$t('clientManage')
       }],
+      isLoadGrid: false,
       gridOption: {},
       parentFuncList: []
     }
@@ -47,21 +48,49 @@ export default {
     GridManager
   },
   created () {
-    var tmpp = this
-    this.gridOption = {
-      gridManagerName: 'client-Table',
-      height: '100%',
-      firstLoading: true,
-      pageSize: 10,
-      columnData: this.ParseColData(),
-      supportAjaxPage: true,
-      ajaxData: function (settings, params) {
-        return tmpp.newData(params.cPage, params.pSize)
+    var tmpThis = this
+    this.getColName().then(value => {
+      tmpThis.gridOption = {
+        gridManagerName: this.$route.path.slice(1),
+        height: '100%',
+        // firstLoading: true,
+        pageSize: 10,
+        columnData: value,
+        supportAjaxPage: true,
+        supportConfig: true,
+        ajaxData: function (settings, params) {
+          return tmpThis.newData(params.cPage, params.pSize)
+          // return {
+          //   totals: 0,
+          //   data: []
+          // }
+        }
       }
-
-    }
+      tmpThis.isLoadGrid = true
+    })
   },
   methods: {
+    async getColName () {
+      const routePath = this.$route.path.slice(1)
+      const res = await getTableConfig({ funcName: routePath })
+      console.log('ok')
+      console.log(res)
+      if (res.Code !== 0) {
+        this.$message.error('table load error !')
+      }
+      const tmpName = res.Data.map(item => {
+        return item.field_name
+      })
+      // this.gridOption.columnData =
+      return tmpName.map(
+        element => {
+          return {
+            key: element,
+            text: element
+          }
+        }
+      )
+    },
     ParseColData () {
       return this.defaultColName.map(
         element => {
@@ -74,33 +103,36 @@ export default {
     },
 
     async newData (page_, size_) {
+      console.log(page_)
       const paramData = {
         page: page_,
-        size: size_
+        size: size_,
+        funcName: this.$route.path.slice(1)
       }
       var tmp = {}
-      await getTradeAccountData(paramData).then(
+      await getTableDataList(paramData).then(
         (responseData) => {
           const getData = responseData
           if (getData.Code !== 0) {
             return
           }
-          const userList = getData.User
-          const funcValidStr = (obj) => { return obj.valid ? obj.String : '' }
-          const funcValidTime = (obj) => { return obj.valid ? obj.Time : '' }
-          tmp.data = userList.map(
-            ele => {
-              ele.ClientType = funcValidStr(ele.ClientType)
-              ele.DateJoined = funcValidTime(ele.DateJoined)
-              ele.Email = funcValidStr(ele.Email)
-              ele.LastLogin = funcValidTime(ele.LastLogin)
-              ele.Phone = funcValidStr(ele.Phone)
-              ele.Remark = funcValidStr(ele.Remark)
-              ele.Username = funcValidStr(ele.Username)
-              ele.UserNick = funcValidStr(ele.UserNick)
-              return ele
-            }
-          )
+          // const userList = getData.Data
+          // const funcValidStr = (obj) => { return obj.valid ? obj.String : '' }
+          // const funcValidTime = (obj) => { return obj.valid ? obj.Time : '' }
+          // tmp.data = userList.map(
+          //   ele => {
+          //     ele.ClientType = funcValidStr(ele.ClientType)
+          //     ele.DateJoined = funcValidTime(ele.DateJoined)
+          //     ele.Email = funcValidStr(ele.Email)
+          //     ele.LastLogin = funcValidTime(ele.LastLogin)
+          //     ele.Phone = funcValidStr(ele.Phone)
+          //     ele.Remark = funcValidStr(ele.Remark)
+          //     ele.Username = funcValidStr(ele.Username)
+          //     ele.UserNick = funcValidStr(ele.UserNick)
+          //     return ele
+          //   }
+          // )
+          tmp.data = getData.Data
           tmp.totals = 100
         }
       )
@@ -109,7 +141,6 @@ export default {
     updateRow (row) {
       console.log('555')
     },
-
     addDialog () {
       this.addVisible = true
     },
@@ -122,7 +153,16 @@ export default {
       this.addVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
     }
-
+  },
+  watch: {
+    async $route (to, from) {
+      this.isLoadGrid = false
+      const value = await this.getColName()
+      console.log('had been')
+      this.gridOption.gridManagerName = to.path.slice(1)
+      this.gridOption.columnData = value
+      this.isLoadGrid = true
+    }
   }
 }
 </script>
