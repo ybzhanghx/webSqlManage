@@ -12,7 +12,7 @@ import { getTableNames } from 'src/api/api'
 
 export default async function setroute () {
   const res = await getTableNames({ db: 'TradeFxDB' })
-  console.log(res)
+
   const tmpChildren = res.Data.map(item => {
     return {
       path: '/' + item,

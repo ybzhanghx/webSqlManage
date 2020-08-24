@@ -22,21 +22,33 @@
       </div>
     </div>
 
-    <el-dialog :visible.sync="addVisible" title="增加" width="30%">
-      <el-form  label-width="70px" ref="form">
-        <el-form-item :label="this.$t('funcName')">
-          <el-select v-model="selectValue" placeholder="请选择" value-key="label">
+    <el-dialog :visible.sync="addVisible" :title="this.$t('add')" width="35%">
+<!--      类型-->
+      <el-form  label-width="80px" ref="form" size="medium" >
+        <el-form-item :label="this.$t('type')">
+          <el-select v-model="selectTypeValue" style="width:30%">
             <el-option
-              v-for="item in funcList"
+              v-for="item in TypeSelectList"
               :key="item.value"
               :label="item.label"
-              :value="item"
-              :disabled="item.disabled">
+              :value="item">
               <span style="float: left">{{ item.label }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item :label="this.$t('dataSource')"   v-if="selectTypeValue.value==='Leaf'">
+          <el-cascader  style="width:50%"
+            v-model="selectValue"
+            :options="dataSourceList"
+            :props="{ expandTrigger: 'hover' }"
+           ></el-cascader>
+        </el-form-item>
+<!--        功能名-->
+        <el-form-item :label="this.$t('funcName')" style="width:50%">
+          <el-input v-model="EditFuncName" placeholder="请输入内容" ></el-input>
+        </el-form-item>
+<!--        所在层级-->
         <el-form-item :label="$t('parentFunc')">
           <el-select v-model="selectParentValue"  :disabled="isDisableParentSelect" placeholder="请选择" value-key="label">
             <el-option
@@ -46,7 +58,7 @@
               :value="item"
               :disabled="item.disabled">
               <span style="float: left">{{ item.label }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+              <!--              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
             </el-option>
           </el-select>
         </el-form-item>
@@ -96,9 +108,22 @@ export default {
         }],
       tableConfigJsonStr: '',
       tmpConfigValue: '',
+      // start-- 添加框
+      EditFuncName: '',
+      selectTypeValue: {},
+      TypeSelectList: [{
+        value: 'Leaf',
+        label: this.$t('leafNode')
+      },
+      {
+        value: 'Parent',
+        label: this.$t('nonLeafNode')
+
+      }],
       selectValue: {},
       selectParentValue: {},
       addVisible: false,
+      // end
       editVisible: false,
       editRow: {},
       gridOption: {
@@ -146,54 +171,73 @@ export default {
   created () {
     this.addVisible = false
     this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
-    getTableNames({ db: 'TradeFxDB' }).then(responseData => {
+    getTableNames({ }).then(responseData => {
       console.log(responseData)
-      const tmp = responseData.Data.map(item => {
-        return {
-          value: item,
-          label: item,
-          disabled: false
+
+      for (const dbtb of responseData.Data) {
+        const node = {
+          value: dbtb.DbName,
+          label: dbtb.DbName
         }
-      })
-      this.baseList.push(...tmp) // 配置所有表名
+        node.children = dbtb.TbName.map(Tb => {
+          return {
+            value: Tb,
+            label: Tb,
+            disabled: false
+          }
+        })
+        this.baseList.push(node)
+      }
+      console.log(this.baseList)
+      // const tmp = responseData.Data.map(item => {
+      //   return {
+      //     value: item,
+      //     label: item,
+      //     disabled: false
+      //   }
+      // })
+      // this.baseList.push(...tmp) // 配置所有表名
     }
     )
   },
   computed: {
     tableData: function () {
       const getTree = this.$store.getters.getState
-      const tmpData = getTree.child.map(itemValue => {
+      const tmpData = getTree.children.map(itemValue => {
         return {
-          funcKey: itemValue.key,
+          funcKey: itemValue.value,
           parentFunKey: '/',
-          funcName: itemValue.Name,
+          funcName: itemValue.value,
           parentName: '/'
         }
       })
       return { data: tmpData, totals: tmpData.length }
     },
-    funcList: function () {
-      const getTree = this.$store.getters.getState
+    dataSourceList: function () {
+      // const getLeafs = this.$store.getters.getAllLeaf
       // 去除已选的
       const tmpList = this.baseList
-      getTree.child.map(item => {
-        const index = tmpList.findIndex(element => element.value === item.key)
-        if (index !== -1) {
-          tmpList[index].disabled = true
-        }
-      })
+      // getLeafs.map(item => {
+      //   const index = tmpList.findIndex(element => element.value === item.value)
+      //   if (index !== -1) {
+      //     tmpList[index].disabled = true
+      //   }
+      // })
       return tmpList
     },
     parentFuncList: function () {
-      const parentFuncLists = this.funcList.concat({
-        value: '/',
-        label: '/'
+      const getTree = this.$store.getters.getState
+      return getTree.children.map(item => {
+        return {
+          value: item.value,
+          label: item.value,
+          disabled: false
+        }
       })
-      const index = parentFuncLists.findIndex(element => element.value === this.selectValue.value)
-      if (index !== -1) {
-        parentFuncLists[index].disabled = true
-      }
-      return parentFuncLists
+      // const index = parentFuncLists.findIndex(element => element.value === this.selectValue.value)
+      // if (index !== -1) {
+      //   parentFuncLists[index].disabled = true
+      // }
     },
     isDisableParentSelect: function () {
       return Object.keys(this.selectValue).length === 0

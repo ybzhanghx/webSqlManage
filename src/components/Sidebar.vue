@@ -69,11 +69,11 @@ export default {
   computed: {
     items: function () {
       const getTree = this.$store.getters.getState
-      const tmp = getTree.child.map(node => {
+      const tmp = getTree.children.map(node => {
         return {
           icon: 'el-icon-lx-copy',
-          index: node.key,
-          title: node.Name
+          index: node.value,
+          title: node.value
         }
       })
       return baseItems.concat(tmp)

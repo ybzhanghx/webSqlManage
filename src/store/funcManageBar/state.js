@@ -2,13 +2,16 @@ export default {
   funcTree: {
     root: '/',
     name: '/',
-    child: [
+    children: [
       {
-        key: 'test',
+        value: 'test',
+        isLeaf: false,
         Name: '测试页'
       },
       {
-        key: 'clientManage',
+        value: 'clientManage',
+        children: [],
+        isLeaf: false,
         Name: '客户端管理'
       }
     ]

@@ -2,9 +2,15 @@ export default {
   Loading: 'Loading',
   successfulinitdata: '初始化成功,请刷新浏览器',
   add: '添加',
+  type: '类型',
+  askSelect: '请选择',
+  // dataStruct
+  leafNode: '叶子节点',
+  nonLeafNode: '非叶子节点',
   // funcMange
+  dataSource: '数据源',
   funcName: '功能名',
-  parentFunc: '上层功能',
+  parentFunc: '所在层级',
   userManage: '用户管理',
   clientManage: '客户端管理',
   accountManage: '交易账户管理',
