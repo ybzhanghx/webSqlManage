@@ -69,13 +69,7 @@ export default {
   computed: {
     items: function () {
       const getTree = this.$store.getters.getState
-      const tmp = getTree.children.map(node => {
-        return {
-          icon: 'el-icon-lx-copy',
-          index: node.value,
-          title: node.value
-        }
-      })
+      const tmp = this.parseTree(getTree.children)
       return baseItems.concat(tmp)
     },
     onRoutes () {
@@ -88,6 +82,21 @@ export default {
       this.collapse = msg
       bus.$emit('collapse-content', msg)
     })
+  },
+  methods: {
+    parseTree (list) {
+      return list.map(node => {
+        const tmp = {
+          icon: 'el-icon-lx-copy',
+          index: node.value,
+          title: node.name
+        }
+        if ('children' in node) {
+          tmp.subs = this.parseTree(node.children)
+        }
+        return tmp
+      })
+    }
   }
 }
 </script>

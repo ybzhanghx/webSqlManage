@@ -1,19 +1,9 @@
+import { FuncTreeNode } from './common'
+const funcTree = new FuncTreeNode('/', '/', false)
+funcTree.setChildren([
+  new FuncTreeNode('test', '测试页', false),
+  new FuncTreeNode('clientManage', '客户端管理', false)]
+)
 export default {
-  funcTree: {
-    root: '/',
-    name: '/',
-    children: [
-      {
-        value: 'test',
-        isLeaf: false,
-        Name: '测试页'
-      },
-      {
-        value: 'clientManage',
-        children: [],
-        isLeaf: false,
-        Name: '客户端管理'
-      }
-    ]
-  }
+  funcTree: funcTree
 }

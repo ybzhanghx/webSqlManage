@@ -39,7 +39,7 @@
         </el-form-item>
         <el-form-item :label="this.$t('dataSource')"   v-if="selectTypeValue.value==='Leaf'">
           <el-cascader  style="width:50%"
-            v-model="selectValue"
+            v-model="selectDataSourceValue"
             :options="dataSourceList"
             :props="{ expandTrigger: 'hover' }"
            ></el-cascader>
@@ -50,7 +50,7 @@
         </el-form-item>
 <!--        所在层级-->
         <el-form-item :label="$t('parentFunc')">
-          <el-select v-model="selectParentValue"  :disabled="isDisableParentSelect" placeholder="请选择" value-key="label">
+          <el-select v-model="selectParentValue" :disabled="isDisableParentSelect" placeholder="请选择" value-key="label">
             <el-option
               v-for="item in parentFuncList"
               :key="item.value"
@@ -87,6 +87,7 @@ import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
 import { getTableConfig, getTableNames, UpdateTableConfig } from '../api/api'
+import { FuncTreeNode } from '../store/funcManageBar/common'
 
 export default {
   data () {
@@ -120,9 +121,10 @@ export default {
         label: this.$t('nonLeafNode')
 
       }],
-      selectValue: {},
+      selectDataSourceValue: {},
       selectParentValue: {},
       addVisible: false,
+      setTmpValue: 0,
       // end
       editVisible: false,
       editRow: {},
@@ -207,7 +209,7 @@ export default {
         return {
           funcKey: itemValue.value,
           parentFunKey: '/',
-          funcName: itemValue.value,
+          funcName: itemValue.name,
           parentName: '/'
         }
       })
@@ -227,20 +229,27 @@ export default {
     },
     parentFuncList: function () {
       const getTree = this.$store.getters.getState
-      return getTree.children.map(item => {
+      const tmpList = [{
+        value: '/',
+        label: '/',
+        disabled: false
+      }]
+      tmpList.push(...getTree.children.map(item => {
         return {
           value: item.value,
-          label: item.value,
+          label: item.Name,
           disabled: false
         }
-      })
+      }))
+      console.log(tmpList)
+      return tmpList
       // const index = parentFuncLists.findIndex(element => element.value === this.selectValue.value)
       // if (index !== -1) {
       //   parentFuncLists[index].disabled = true
       // }
     },
     isDisableParentSelect: function () {
-      return Object.keys(this.selectValue).length === 0
+      return this.selectTypeValue.value === 'Parent'
     }
   },
 
@@ -310,16 +319,23 @@ export default {
       return this.tableData
     },
     addFun () {
-      this.selectValue.disabled = true
-      const tmp = this.tableData
-      tmp.data.push({
-        funcKey: this.selectValue.value,
-        parentFunKey: this.selectParentValue.value,
-        funcName: this.selectValue.label,
-        parentName: this.selectParentValue.label
-      })
-      this.updateVuexTable(tmp)
+      this.selectDataSourceValue.disabled = true
+      const tmpNode = new FuncTreeNode(
+        '',
+        this.EditFuncName,
+        this.selectTypeValue.value === 'Leaf'
+      )
+      let parentDir = '/'
+      if (this.selectTypeValue.value === 'Leaf') {
+        tmpNode.value = this.selectDataSourceValue.value
+        parentDir = this.selectParentValue.value
+      } else {
+        this.setTmpValue++
+        tmpNode.value = 'item' + String(this.setTmpValue)
+      }
+      this.$store.commit({ type: 'addNode', nodeData: { node: tmpNode, parent: parentDir } })
       this.addVisible = false
+      GridManager.refreshGrid(this.gridOption.gridManagerName)
     },
     updateVuexTable (tmpTableData) {
       const commitData = tmpTableData.data.map(item => {
