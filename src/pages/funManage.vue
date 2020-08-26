@@ -237,7 +237,7 @@ export default {
       tmpList.push(...getTree.children.map(item => {
         return {
           value: item.value,
-          label: item.Name,
+          label: item.name,
           disabled: false
         }
       }))
@@ -327,7 +327,7 @@ export default {
       )
       let parentDir = '/'
       if (this.selectTypeValue.value === 'Leaf') {
-        tmpNode.value = this.selectDataSourceValue.value
+        tmpNode.value = this.selectDataSourceValue.reduce((a, b) => { return a + b })
         parentDir = this.selectParentValue.value
       } else {
         this.setTmpValue++

@@ -1,47 +1,43 @@
 <template>
   <div class="sidebar">
+
     <el-menu
       :collapse="collapse"
       :default-active="onRoutes"
       active-text-color="#20a0ff"
       background-color="#324157"
       class="sidebar-el-menu"
-      router
       text-color="#bfcbd9"
+      router
       unique-opened
     >
       <template v-for="item in items">
         <template v-if="item.subs">
-          <el-submenu :index="item.index" :key="item.index">
+          <el-submenu :route="{path: '/'+item.index }" :index="item.index" :key="item.index">
             <template slot="title">
               <i :class="item.icon"></i>
               <span slot="title">{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
-              <el-submenu
-                :index="subItem.index"
-                :key="subItem.index"
-                v-if="subItem.subs"
-              >
-                <template slot="title">{{ subItem.title }}</template>
-                <el-menu-item
-                  :index="threeItem.index"
-                  :key="i"
-                  v-for="(threeItem,i) in subItem.subs"
-                >{{ threeItem.title }}
-                </el-menu-item>
-              </el-submenu>
+<!--              <el-submenu-->
+<!--                :index="subItem.index+'id'"-->
+<!--                :route="{path: '/table/'+item.index }"-->
+<!--                :key="subItem.index+'id'"-->
+<!--                v-if="subItem.subs"-->
+<!--              >-->
+<!--                <template slot="title">{{ subItem.title }}</template>-->
+<!--              </el-submenu>-->
               <el-menu-item
                 :index="subItem.index"
                 :key="subItem.index"
-                v-else
+                :route="{path: '/table/'+item.index }"
               >{{ subItem.title }}
               </el-menu-item>
             </template>
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :index="item.index" :key="item.index">
+          <el-menu-item :route="{path: '/'+item.index }"  :index="item.index" :key="item.index">
             <i :class="item.icon"></i>
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
@@ -69,10 +65,22 @@ export default {
   computed: {
     items: function () {
       const getTree = this.$store.getters.getState
-      const tmp = this.parseTree(getTree.children)
+      const tmp = getTree.children.map(node => {
+        const tmpNode = {
+          icon: 'el-icon-collection-tag',
+          index: node.value,
+          title: node.name
+        }
+        if (node.childs > 0) {
+          tmpNode.subs = this.parseTree(node.children)
+        }
+        return tmpNode
+      })
+      console.log(tmp)
       return baseItems.concat(tmp)
     },
     onRoutes () {
+      console.log('233')
       return this.$route.path.replace('/', '')
     }
   },
@@ -87,11 +95,11 @@ export default {
     parseTree (list) {
       return list.map(node => {
         const tmp = {
-          icon: 'el-icon-lx-copy',
+          icon: 'el-icon-collection-tag',
           index: node.value,
           title: node.name
         }
-        if ('children' in node) {
+        if (node.childs > 0) {
           tmp.subs = this.parseTree(node.children)
         }
         return tmp

@@ -11,7 +11,7 @@ function findNode (tree, nodeValue) {
       return { ok: false }
     }
     for (const child of tree.children) {
-      const tmp = findNode(child)
+      const tmp = findNode(child, nodeValue)
       if (tmp.ok) {
         return tmp
       }

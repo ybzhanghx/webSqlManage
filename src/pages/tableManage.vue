@@ -51,7 +51,7 @@ export default {
     var tmpThis = this
     this.getColName().then(value => {
       tmpThis.gridOption = {
-        gridManagerName: this.$route.path.slice(1),
+        gridManagerName: this.$route.path.slice(7),
         height: '100%',
         // firstLoading: true,
         pageSize: 10,
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     async getColName () {
-      const routePath = this.$route.path.slice(1)
+      const routePath = this.$route.path.slice(7)
       const res = await getTableConfig({ funcName: routePath })
       console.log('ok')
       console.log(res)
@@ -159,7 +159,7 @@ export default {
       this.isLoadGrid = false
       const value = await this.getColName()
       console.log('had been')
-      this.gridOption.gridManagerName = to.path.slice(1)
+      this.gridOption.gridManagerName = to.path.slice(7)
       this.gridOption.columnData = value
       this.isLoadGrid = true
     }

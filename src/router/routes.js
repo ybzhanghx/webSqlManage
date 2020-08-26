@@ -1,25 +1,12 @@
-import { getTableNames } from 'src/api/api'
-
-// await getTableNames('TradeFxDB').then(res => {
-//   tmpChildren = res.Data.map(item => {
-//     return {
-//       path: '/' + item,
-//       component: () => import('pages/tableManage'),
-//       meta: { title: item }
-//     }
-//   })
-// })
-
 export default async function setroute () {
-  const res = await getTableNames({ db: 'TradeFxDB' })
-
-  const tmpChildren = res.Data.map(item => {
-    return {
-      path: '/' + item,
-      component: () => import('pages/tableManage'),
-      meta: { title: item }
-    }
-  })
+  // const res = await getTableNames({ db: 'TradeFxDB' })
+  // const tmpChildren = res.Data.map(item => {
+  //   return {
+  //     path: '/table/:tableName' + item,
+  //     component: () => import('pages/tableManage'),
+  //     meta: { title: item }
+  //   }
+  // })
   const routes = [
     {
       path: '/',
@@ -33,7 +20,7 @@ export default async function setroute () {
         {
           path: '/funManage',
           component: () => import('pages/funManage'),
-          meta: { title: '功能管理' }
+          meta: { title: '功能管理', name: 'funManage' }
         },
         {
           path: '/test',
@@ -41,11 +28,21 @@ export default async function setroute () {
           meta: { title: '测试' }
         },
         {
+          // path: '/table',
+          // redirect: '/table/:name',
+          // children: [
+          //   {
+          path: '/table/:name',
+          component: () => import('pages/tableManage'),
+          meta: { title: '数据管理' }
+          //   }
+          // ]
+        },
+        {
           path: '/clientManage',
           component: () => import('pages/clientManage'),
           meta: { title: '客户端管理' }
-        },
-        ...tmpChildren
+        }
         // {
         //   path: '/funManage2',
         //   component: () => import('/pages/funManage'),
@@ -70,6 +67,7 @@ export default async function setroute () {
       path: '*',
       component: () => import('pages/Error404.vue')
     }]
+  console.log(routes)
   return routes
 }
 
