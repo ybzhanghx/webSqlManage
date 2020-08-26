@@ -30,7 +30,7 @@
               <el-menu-item
                 :index="subItem.index"
                 :key="subItem.index"
-                :route="{path: '/table/'+item.index }"
+                :route="{path: '/table/'+subItem.index }"
               >{{ subItem.title }}
               </el-menu-item>
             </template>

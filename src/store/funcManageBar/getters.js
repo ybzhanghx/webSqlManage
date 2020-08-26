@@ -1,7 +1,8 @@
-
+import { findNode } from 'src/store/funcManageBar/common'
 export const getState = state => {
   return state.funcTree
 }
+
 function findLeaf (node) {
   if (node.isLeaf) { return [node] }
   if (node.children.length === 0) { return [] }
@@ -14,4 +15,8 @@ function findLeaf (node) {
 }
 export const getAllLeaf = state => {
   return findLeaf(state.funcTree)
+}
+
+export const getNameByValue = (state) => (value) => {
+  return findNode(state.funcTree, value)
 }

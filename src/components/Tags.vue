@@ -57,8 +57,19 @@ export default {
       })
       this.tagsList = curItem
     },
+    GetTagName (routePath) {
+      const isTable = routePath.indexOf('/table/')
+      let getValue = ''
+      if (isTable < 0) {
+        getValue = routePath.slice(1)
+      } else {
+        getValue = routePath.slice(7)
+      }
+      return this.$store.getters.getNameByValue(getValue)
+    },
     // 设置标签
     setTags (route) {
+      console.log(route)
       const isExist = this.tagsList.some(item => {
         return item.path === route.fullPath
       })
@@ -66,8 +77,10 @@ export default {
         if (this.tagsList.length >= 8) {
           this.tagsList.shift()
         }
+        const titleRes = this.GetTagName(route.fullPath)
+        const titleStr = titleRes.ok ? titleRes.getNode.name : route.meta.title
         this.tagsList.push({
-          title: route.meta.title,
+          title: titleStr,
           path: route.fullPath
         })
       }

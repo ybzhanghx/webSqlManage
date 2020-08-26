@@ -1,23 +1,7 @@
+import { findNode } from 'src/store/funcManageBar/common'
 
 export const update = (state, newStateParam) => {
   state.funcTree.child = newStateParam.newState
-}
-
-function findNode (tree, nodeValue) {
-  if (tree.value === nodeValue) {
-    return { getNode: tree, ok: true }
-  } else {
-    if (tree.childs === 0) {
-      return { ok: false }
-    }
-    for (const child of tree.children) {
-      const tmp = findNode(child, nodeValue)
-      if (tmp.ok) {
-        return tmp
-      }
-    }
-    return { ok: false }
-  }
 }
 
 export const addNode = (state, newStateParam) => {

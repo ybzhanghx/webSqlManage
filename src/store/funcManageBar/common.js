@@ -14,3 +14,23 @@ class FuncTreeNode {
   }
 }
 export { FuncTreeNode }
+
+export function findNode (tree, nodeValue) {
+  if (tree.value === nodeValue) {
+    return {
+      getNode: tree,
+      ok: true
+    }
+  } else {
+    if (tree.childs === 0) {
+      return { ok: false }
+    }
+    for (const child of tree.children) {
+      const tmp = findNode(child, nodeValue)
+      if (tmp.ok) {
+        return tmp
+      }
+    }
+    return { ok: false }
+  }
+}
