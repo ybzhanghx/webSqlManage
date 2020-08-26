@@ -26,7 +26,7 @@
 <!--      类型-->
       <el-form  label-width="80px" ref="form" size="medium" >
         <el-form-item :label="this.$t('type')">
-          <el-select v-model="selectTypeValue" style="width:30%">
+          <el-select v-model="selectTypeValue" style="width:30%" @change="TypeValueChoosed">
             <el-option
               v-for="item in TypeSelectList"
               :key="item.value"
@@ -88,7 +88,7 @@ import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
 import { getTableConfig, getTableNames, UpdateTableConfig } from '../api/api'
 import { FuncTreeNode } from '../store/funcManageBar/common'
-
+import TableDataRow from '../common/funcManage'
 export default {
   data () {
     return {
@@ -206,13 +206,14 @@ export default {
     tableData: function () {
       const getTree = this.$store.getters.getState
       const tmpData = getTree.children.map(itemValue => {
-        return {
-          funcKey: itemValue.value,
-          parentFunKey: '/',
-          funcName: itemValue.name,
-          parentName: '/'
-        }
+        return new TableDataRow(itemValue.value, '/', itemValue.name, '/')
       })
+      for (const parentTitle of getTree.children) {
+        for (const tableNode of parentTitle.children) {
+          tmpData.push(new TableDataRow(tableNode.value, parentTitle.value, tableNode.name, parentTitle.name))
+        }
+      }
+
       return { data: tmpData, totals: tmpData.length }
     },
     dataSourceList: function () {
@@ -232,7 +233,7 @@ export default {
       const tmpList = [{
         value: '/',
         label: '/',
-        disabled: false
+        disabled: true
       }]
       tmpList.push(...getTree.children.map(item => {
         return {
@@ -314,6 +315,15 @@ export default {
     // 获取 easy-mock 的模拟数据
     addDialog () {
       this.addVisible = true
+      this.selectTypeValue = this.TypeSelectList[1]
+      this.parentFuncList[0].disabled = true
+    },
+    TypeValueChoosed () {
+      if (this.selectTypeValue.value === 'Leaf') {
+        this.selectParentValue = {}
+      } else {
+        this.selectParentValue = this.parentFuncList[0]
+      }
     },
     async setTableData () {
       return this.tableData
