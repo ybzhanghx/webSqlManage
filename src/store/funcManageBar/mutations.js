@@ -1,28 +1,36 @@
-import { findNode } from 'src/store/funcManageBar/common'
+import { addThisNode, findNode, removeNode } from 'src/store/funcManageBar/common'
 
 export const update = (state, newStateParam) => {
   state.funcTree.child = newStateParam.newState
 }
 
 export const addNode = (state, newStateParam) => {
-  console.log(newStateParam)
-  const ParentNode = findNode(state.funcTree, newStateParam.nodeData.parent)
-  console.log(ParentNode)
-  if (!ParentNode.ok) {
-    return { ok: false, msg: 'parent not find' }
+  const node = newStateParam.nodeData.node
+  const parent = newStateParam.nodeData.parent
+  return addThisNode(state.funcTree, parent, node)
+}
+
+export const updateNode = (state, param) => {
+  // value, name, isLeaf, parentValue, newParentValue = param.value, param.name,
+  const nodeRes = findNode(state.funcTree, param.value)
+  if (!nodeRes.ok) {
+    return
   }
-  let hadExist = false
-  for (const value of ParentNode.getNode.children) {
-    if (value.value === newStateParam.nodeData.node.value) {
-      hadExist = true
-    }
+  const node = nodeRes.getNode
+  node.update(param.name, param.isLeaf, node.children)
+  if (param.parentValue !== param.newParentValue) {
+    removeNode(state.funcTree, param.parentValue, node)
+    addThisNode(state.funcTree, param.newParentValue, node)
   }
-  if (hadExist) {
-    return { ok: false, msg: 'had been add' }
+  // const parentNode = findNode(state.funcTree, parentValue)
+}
+
+export const delNode = (state, param) => {
+  // value, name, isLeaf, parentValue, newParentValue = param.value, param.name,
+  const nodeRes = findNode(state.funcTree, param.value)
+  if (!nodeRes.ok) {
+    return
   }
-  console.log(newStateParam)
-  ParentNode.getNode.children.push(newStateParam.nodeData.node)
-  ParentNode.getNode.childs++
-  console.log(state.funcTree)
-  return { ok: true, msg: 'success add' }
+  const node = nodeRes.getNode
+  removeNode(state.funcTree, param.parentValue, node)
 }

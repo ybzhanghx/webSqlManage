@@ -22,11 +22,11 @@
       </div>
     </div>
 
-    <el-dialog :visible.sync="addVisible" :title="this.$t('add')" width="35%">
+    <el-dialog :visible.sync="addVisible" :title="this.$t(this.DialogAction)" width="35%">
 <!--      类型-->
       <el-form  label-width="80px" ref="form" size="medium" >
         <el-form-item :label="this.$t('type')">
-          <el-select v-model="selectTypeValue" style="width:30%" @change="TypeValueChoosed">
+          <el-select v-model="selectTypeValue" :disabled="this.DialogAction !=='add'" style="width:30%" @change="TypeValueChoosed">
             <el-option
               v-for="item in TypeSelectList"
               :key="item.value"
@@ -37,11 +37,14 @@
             </el-option>
           </el-select>
         </el-form-item>
+<!--        数据源-->
         <el-form-item :label="this.$t('dataSource')"   v-if="selectTypeValue.value==='Leaf'">
           <el-cascader  style="width:50%"
             v-model="selectDataSourceValue"
             :options="dataSourceList"
+                        :disabled="this.DialogAction !=='add'"
             :props="{ expandTrigger: 'hover' }"
+
            ></el-cascader>
         </el-form-item>
 <!--        功能名-->
@@ -65,7 +68,7 @@
       </el-form>
       <span class="dialog-footer" slot="footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button @click="addFun()" type="primary">确 定</el-button>
+                <el-button @click="dialogFun()" type="primary">确 定</el-button>
             </span>
     </el-dialog>
 
@@ -96,17 +99,7 @@ export default {
         tt: 2,
         bb: 3
       },
-      baseList: [
-        {
-          value: 'test',
-          label: '测试',
-          disabled: false
-        },
-        {
-          value: 'clientManage',
-          label: this.$t('clientManage'),
-          disabled: false
-        }],
+      baseList: [],
       tableConfigJsonStr: '',
       tmpConfigValue: '',
       // start-- 添加框
@@ -125,9 +118,11 @@ export default {
       selectParentValue: {},
       addVisible: false,
       setTmpValue: 0,
+      DialogAction: 'add',
+      editRow: {},
       // end
       editVisible: false,
-      editRow: {},
+      editThisRow: {},
       gridOption: {
         // 表格唯一標識
         gridManagerName: 'test-gm',
@@ -137,21 +132,20 @@ export default {
         columnData: [
           {
             key: 'funcName',
-            width: '180px',
             text: this.$t('funcName'),
             align: 'center'
           }, {
             key: 'parentName',
-            width: '180px',
+
             text: this.$t('parentFunc'),
             align: 'center'
           }, {
             key: 'action',
-            width: '180px',
             text: '动作',
             align: 'center',
             template: () => {
-              return '<el-button size="mini"  @click="updateRow(row)">编辑 </el-button>' +
+              return '<el-button size="mini"  @click="updateVisible(row)">修改 </el-button>' +
+                '<el-button size="mini"  @click="updateSource(row)">编辑数据源配置 </el-button>' +
                 '<el-button size="mini"  @click="delRow(row)">删除 </el-button>'
             }
           }
@@ -206,11 +200,11 @@ export default {
     tableData: function () {
       const getTree = this.$store.getters.getState
       const tmpData = getTree.children.map(itemValue => {
-        return new TableDataRow(itemValue.value, '/', itemValue.name, '/')
+        return new TableDataRow(itemValue.value, '/', itemValue.name, '/', itemValue.isLeaf)
       })
       for (const parentTitle of getTree.children) {
         for (const tableNode of parentTitle.children) {
-          tmpData.push(new TableDataRow(tableNode.value, parentTitle.value, tableNode.name, parentTitle.name))
+          tmpData.push(new TableDataRow(tableNode.value, parentTitle.value, tableNode.name, parentTitle.name, tableNode.isLeaf))
         }
       }
 
@@ -283,13 +277,29 @@ export default {
       this.tableConfigJsonStr = newValue
     },
     delRow (row) {
-      const tmp = this.tableData
-      tmp.data = tmp.data.filter(
-        ({ funcName }) => funcName !== row.funcName
-      )
-      this.updateVuexTable(tmp)
+      this.$store.commit({
+        type: 'delNode',
+
+        value: row.funcKey,
+        parentValue: row.parentFunKey
+
+      })
+      GridManager.refreshGrid(this.gridOption.gridManagerName)
     },
-    async updateRow (row) {
+    // 点击编辑行数据
+    updateVisible (row) {
+      // console.log(row)
+      this.editRow = row
+      this.addVisible = true
+      this.DialogAction = 'update'
+      this.selectTypeValue = row.type ? this.TypeSelectList[0] : this.TypeSelectList[1]
+      this.selectDataSourceValue = row.funcKey.split('|')
+      this.selectParentValue = {
+        value: this.editRow.parentFunKey,
+        label: this.editRow.parentName
+      }
+    },
+    async updateSource (row) {
       // console.log(row)
       this.tableConfig = {}
       try {
@@ -315,6 +325,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     addDialog () {
       this.addVisible = true
+      this.DialogAction = 'add'
       this.selectTypeValue = this.TypeSelectList[1]
       this.parentFuncList[0].disabled = true
     },
@@ -328,8 +339,14 @@ export default {
     async setTableData () {
       return this.tableData
     },
+    dialogFun () {
+      if (this.DialogAction === 'add') {
+        this.addFun()
+      } else {
+        this.editFun()
+      }
+    },
     addFun () {
-      this.selectDataSourceValue.disabled = true
       const tmpNode = new FuncTreeNode(
         '',
         this.EditFuncName,
@@ -337,13 +354,26 @@ export default {
       )
       let parentDir = '/'
       if (this.selectTypeValue.value === 'Leaf') {
-        tmpNode.value = this.selectDataSourceValue.reduce((a, b) => { return a + b })
+        tmpNode.value = this.selectDataSourceValue.reduce((a, b) => { return a + '|' + b })
         parentDir = this.selectParentValue.value
       } else {
         this.setTmpValue++
         tmpNode.value = 'item' + String(this.setTmpValue)
       }
       this.$store.commit({ type: 'addNode', nodeData: { node: tmpNode, parent: parentDir } })
+      this.addVisible = false
+      GridManager.refreshGrid(this.gridOption.gridManagerName)
+    },
+    editFun () {
+      this.$store.commit({
+        type: 'updateNode',
+        name: this.EditFuncName,
+        value: this.selectDataSourceValue.reduce((a, b) => { return a + '|' + b }),
+        isLeaf: this.selectTypeValue.value === 'Leaf',
+        parentValue: this.editRow.parentFunKey,
+        newParentValue: this.selectParentValue.value
+
+      })
       this.addVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
     },
