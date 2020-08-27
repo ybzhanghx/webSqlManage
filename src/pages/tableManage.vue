@@ -54,16 +54,12 @@ export default {
         gridManagerName: this.$route.path.slice(7),
         height: '100%',
         // firstLoading: true,
-        pageSize: 10,
+        pageSize: 3,
         columnData: value,
         supportAjaxPage: true,
         supportConfig: true,
         ajaxData: function (settings, params) {
           return tmpThis.newData(params.cPage, params.pSize)
-          // return {
-          //   totals: 0,
-          //   data: []
-          // }
         }
       }
       tmpThis.isLoadGrid = true
@@ -71,10 +67,10 @@ export default {
   },
   methods: {
     async getColName () {
-      const routePath = this.$route.path.slice(7)
-      const res = await getTableConfig({ funcName: routePath })
-      console.log('ok')
-      console.log(res)
+      console.log(this.$route.path)
+      const tmpArr = this.$route.path.slice(7).split('|')
+      console.log(tmpArr)
+      const res = await getTableConfig({ DB: tmpArr[0], TB: tmpArr[1] })
       if (res.Code !== 0) {
         this.$message.error('table load error !')
       }
@@ -104,10 +100,12 @@ export default {
 
     async newData (page_, size_) {
       console.log(page_)
+      const tmpArr = this.$route.path.slice(7).split('|')
       const paramData = {
         page: page_,
         size: size_,
-        funcName: this.$route.path.slice(1)
+        DB: tmpArr[0],
+        TB: tmpArr[1]
       }
       var tmp = {}
       await getTableDataList(paramData).then(

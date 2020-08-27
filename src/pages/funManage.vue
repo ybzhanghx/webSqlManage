@@ -128,6 +128,7 @@ export default {
         gridManagerName: 'test-gm',
         height: '100%',
         firstLoading: true,
+        pageSize: 2,
         // 列配置
         columnData: [
           {
@@ -151,9 +152,8 @@ export default {
           }
         ],
         supportAjaxPage: true,
-        pageSize: 10,
-        ajaxData: () => {
-          return this.setTableData()
+        ajaxData: (settings, params) => {
+          return this.setTableData(params.cPage, params.pSize)
         }
         // ...更多配置請參考API
       }
@@ -185,14 +185,6 @@ export default {
         this.baseList.push(node)
       }
       console.log(this.baseList)
-      // const tmp = responseData.Data.map(item => {
-      //   return {
-      //     value: item,
-      //     label: item,
-      //     disabled: false
-      //   }
-      // })
-      // this.baseList.push(...tmp) // 配置所有表名
     }
     )
   },
@@ -336,8 +328,12 @@ export default {
         this.selectParentValue = this.parentFuncList[0]
       }
     },
-    async setTableData () {
-      return this.tableData
+    async setTableData (page_, size_) {
+      const tmp = {}
+      tmp.data = this.tableData.data.slice((page_ - 1) * size_, page_ * size_)
+      tmp.totals = this.tableData.totals
+      console.log(tmp)
+      return tmp
     },
     dialogFun () {
       if (this.DialogAction === 'add') {

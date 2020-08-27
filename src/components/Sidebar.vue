@@ -95,7 +95,7 @@ export default {
     parseTree (list) {
       return list.map(node => {
         const tmp = {
-          icon: 'el-icon-collection-tag',
+          icon: 'el-icon-paperclip',
           index: node.value,
           title: node.name
         }
