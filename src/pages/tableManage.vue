@@ -20,7 +20,14 @@
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import { getTableConfig, getTableDataList } from '../api/api'
-
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
+// const dayjs =
+// const utc = require('dayjs/plugin/utc') // dependent on utc plugin
+// const timezone = require('dayjs/plugin/timezone')
 export default {
   data () {
     return {
@@ -110,28 +117,44 @@ export default {
       var tmp = {}
       await getTableDataList(paramData).then(
         (responseData) => {
-          const getData = responseData
-          if (getData.Code !== 0) {
+          if (responseData.Code !== 0) {
             return
           }
-          // const userList = getData.Data
-          // const funcValidStr = (obj) => { return obj.valid ? obj.String : '' }
-          // const funcValidTime = (obj) => { return obj.valid ? obj.Time : '' }
-          // tmp.data = userList.map(
-          //   ele => {
-          //     ele.ClientType = funcValidStr(ele.ClientType)
-          //     ele.DateJoined = funcValidTime(ele.DateJoined)
-          //     ele.Email = funcValidStr(ele.Email)
-          //     ele.LastLogin = funcValidTime(ele.LastLogin)
-          //     ele.Phone = funcValidStr(ele.Phone)
-          //     ele.Remark = funcValidStr(ele.Remark)
-          //     ele.Username = funcValidStr(ele.Username)
-          //     ele.UserNick = funcValidStr(ele.UserNick)
-          //     return ele
-          //   }
-          // )
-          tmp.data = getData.Data
-          tmp.totals = 100
+          const getData = responseData.Data
+          const parseTimeFunc = (obj) => {
+            const tmpDate = dayjs.unix(obj)
+            const tmp = tmpDate.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
+            console.log(tmp)
+            return tmp
+          }
+          const funcValidStr = (obj) => { return obj.Valid ? obj.String : '' }
+          const funcValidTime = (obj) => {
+            return obj.Valid ? parseTimeFunc(obj.TimeStamp) : ''
+          }
+          tmp.data = getData.map(item => {
+            for (const fieldItem of responseData.Fields) {
+              if (fieldItem.AbleNull) {
+                let parseFunc = (obj) => {}
+                switch (fieldItem.TypeName) {
+                  case 'time': parseFunc = funcValidTime; break
+                  case 'string':parseFunc = funcValidStr; break
+                }
+                const tmpV = parseFunc(item[fieldItem.FieldName])
+                console.log(tmpV)
+                item[fieldItem.FieldName] = tmpV
+                console.log(item[fieldItem.FieldName])
+              } else {
+                if (fieldItem.TypeName === 'time') {
+                  item[fieldItem.FieldName] = funcValidTime(item[fieldItem.FieldName])
+                }
+              }
+            }
+            console.log(item)
+            return item
+          }
+          )
+          tmp.totals = responseData.Totals
+          // tmp.totals = responseData.
         }
       )
       return tmp
