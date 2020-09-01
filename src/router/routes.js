@@ -28,28 +28,15 @@ export default async function setroute () {
           meta: { title: '测试' }
         },
         {
-          // path: '/table',
-          // redirect: '/table/:name',
-          // children: [
-          //   {
           path: '/table/:name',
           component: () => import('pages/tableManage'),
           meta: { title: '数据管理' },
           props: { subtitle: ' ' }
-          //   }
-          // ]
         },
         {
-          path: '/clientManage',
-          component: () => import('pages/clientManage'),
-          meta: { title: '客户端管理' }
+          path: '/empty/:name',
+          component: () => import('pages/empty.vue')
         }
-        // {
-        //   path: '/funManage2',
-        //   component: () => import('/pages/funManage'),
-        //   meta: { title: '功能管理' }
-        // },
-
       ]
     },
     {

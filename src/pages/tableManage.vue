@@ -74,9 +74,7 @@ export default {
   },
   methods: {
     async getColName () {
-      console.log(this.$route.path)
       const tmpArr = this.$route.path.slice(7).split('|')
-      console.log(tmpArr)
       const res = await getTableConfig({ DB: tmpArr[0], TB: tmpArr[1] })
       if (res.Code !== 0) {
         this.$message.error('table load error !')
@@ -106,7 +104,6 @@ export default {
     },
 
     async newData (page_, size_) {
-      console.log(page_)
       const tmpArr = this.$route.path.slice(7).split('|')
       const paramData = {
         page: page_,
@@ -124,7 +121,6 @@ export default {
           const parseTimeFunc = (obj) => {
             const tmpDate = dayjs.unix(obj)
             const tmp = tmpDate.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
-            console.log(tmp)
             return tmp
           }
           const funcValidStr = (obj) => { return obj.Valid ? obj.String : '' }
@@ -140,16 +136,13 @@ export default {
                   case 'string':parseFunc = funcValidStr; break
                 }
                 const tmpV = parseFunc(item[fieldItem.FieldName])
-                console.log(tmpV)
                 item[fieldItem.FieldName] = tmpV
-                console.log(item[fieldItem.FieldName])
               } else {
                 if (fieldItem.TypeName === 'time') {
                   item[fieldItem.FieldName] = funcValidTime(item[fieldItem.FieldName])
                 }
               }
             }
-            console.log(item)
             return item
           }
           )
@@ -160,7 +153,6 @@ export default {
       return tmp
     },
     updateRow (row) {
-      console.log('555')
     },
     addDialog () {
       this.addVisible = true
@@ -179,7 +171,6 @@ export default {
     async $route (to, from) {
       this.isLoadGrid = false
       const value = await this.getColName()
-      console.log('had been')
       this.gridOption.gridManagerName = to.path.slice(7)
       this.gridOption.columnData = value
       this.isLoadGrid = true

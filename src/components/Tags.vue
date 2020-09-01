@@ -65,11 +65,14 @@ export default {
       } else {
         getValue = routePath.slice(7)
       }
+      const isEmpty = routePath.indexOf('/empty/')
+      if (isEmpty >= 0) {
+        getValue = routePath.slice(7)
+      }
       return this.$store.getters.getNameByValue(getValue)
     },
     // 设置标签
     setTags (route) {
-      console.log(route)
       const isExist = this.tagsList.some(item => {
         return item.path === route.fullPath
       })
@@ -93,6 +96,10 @@ export default {
   computed: {
     showTags () {
       return this.tagsList.length > 0
+    },
+    tagNames () {
+      const getTree = this.$store.getters.getState
+      return getTree.children
     }
   },
   watch: {

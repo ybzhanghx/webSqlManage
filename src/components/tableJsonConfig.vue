@@ -29,7 +29,6 @@ export default {
   watch: {
     value: function (thisValue) {
       const editorValue = this.jsonEditor.getValue()
-      console.log('watch value' + editorValue)
       // console.
       if (thisValue !== editorValue) {
         this.jsonEditor.setValue(thisValue)

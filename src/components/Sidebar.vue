@@ -73,14 +73,14 @@ export default {
         }
         if (node.childs > 0) {
           tmpNode.subs = this.parseTree(node.children)
+        } else if (node.value !== 'funManage') {
+          tmpNode.index = 'empty/' + node.value
         }
         return tmpNode
       })
-      console.log(tmp)
       return baseItems.concat(tmp)
     },
     onRoutes () {
-      console.log('233')
       return this.$route.path.replace('/', '')
     }
   },

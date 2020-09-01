@@ -128,7 +128,7 @@ export default {
         gridManagerName: 'test-gm',
         height: '100%',
         firstLoading: true,
-        pageSize: 2,
+        pageSize: 10,
         // 列配置
         columnData: [
           {
@@ -168,8 +168,6 @@ export default {
     this.addVisible = false
     this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
     getTableNames({ }).then(responseData => {
-      console.log(responseData)
-
       for (const dbtb of responseData.Data) {
         const node = {
           value: dbtb.DbName,
@@ -184,7 +182,6 @@ export default {
         })
         this.baseList.push(node)
       }
-      console.log(this.baseList)
     }
     )
   },
@@ -199,20 +196,10 @@ export default {
           tmpData.push(new TableDataRow(tableNode.value, parentTitle.value, tableNode.name, parentTitle.name, tableNode.isLeaf))
         }
       }
-
       return { data: tmpData, totals: tmpData.length }
     },
     dataSourceList: function () {
-      // const getLeafs = this.$store.getters.getAllLeaf
-      // 去除已选的
-      const tmpList = this.baseList
-      // getLeafs.map(item => {
-      //   const index = tmpList.findIndex(element => element.value === item.value)
-      //   if (index !== -1) {
-      //     tmpList[index].disabled = true
-      //   }
-      // })
-      return tmpList
+      return this.baseList
     },
     parentFuncList: function () {
       const getTree = this.$store.getters.getState
@@ -228,12 +215,7 @@ export default {
           disabled: false
         }
       }))
-      console.log(tmpList)
       return tmpList
-      // const index = parentFuncLists.findIndex(element => element.value === this.selectValue.value)
-      // if (index !== -1) {
-      //   parentFuncLists[index].disabled = true
-      // }
     },
     isDisableParentSelect: function () {
       return this.selectTypeValue.value === 'Parent'
@@ -249,8 +231,9 @@ export default {
         this.$message.error('json格式错误')
         return
       }
-      if (this.editRow.funcKey === 'test') {
-        const res = await UpdateTableConfig({ funcName: this.editRow.funcKey, Data: parsedObject })
+      if (this.editRow.funcKey === 'zybtest|tableA') {
+        const tmpArr = this.editRow.funcKey.split('|')
+        const res = await UpdateTableConfig({ DB: tmpArr[0], TB: tmpArr[1], Data: parsedObject })
         if (res.Code !== 0) {
           this.$message.error('保存失败' + res.Msg)
         } else {
@@ -280,7 +263,6 @@ export default {
     },
     // 点击编辑行数据
     updateVisible (row) {
-      // console.log(row)
       this.editRow = row
       this.addVisible = true
       this.DialogAction = 'update'
@@ -292,11 +274,10 @@ export default {
       }
     },
     async updateSource (row) {
-      // console.log(row)
       this.tableConfig = {}
       try {
-        const res = await getTableConfig({ funcName: row.funcKey })
-        console.log(row.funcKey)
+        const tmpArr = row.funcKey.split('|')
+        const res = await getTableConfig({ DB: tmpArr[0], TB: tmpArr[1] })
         if (res.Code === 0) {
           this.tableConfig = res.Data.map(item => {
             item.newName = item.field_name
@@ -332,7 +313,6 @@ export default {
       const tmp = {}
       tmp.data = this.tableData.data.slice((page_ - 1) * size_, page_ * size_)
       tmp.totals = this.tableData.totals
-      console.log(tmp)
       return tmp
     },
     dialogFun () {
@@ -372,17 +352,7 @@ export default {
       })
       this.addVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
-    },
-    updateVuexTable (tmpTableData) {
-      const commitData = tmpTableData.data.map(item => {
-        return { key: item.funcKey, Name: item.funcName }
-      })
-      // console.log('ok')
-      this.$store.commit({ type: 'update', newState: commitData })
-      // console.log(this.tableData)
-      GridManager.refreshGrid(this.gridOption.gridManagerName)
     }
-
     // 以下方法是必需的
     // (不要改变它的名称 --> "hide")
     // hide () {
