@@ -16,7 +16,6 @@
                       >{{$t('add')}}
                       </el-button>
       </div>
-
       <div>
         <GridManager :option="gridOption" ref="grid" ></GridManager>
       </div>

@@ -8,10 +8,68 @@
       </el-breadcrumb>
     </div>
     <div class="container" >
+      <div class="handle-box">
+        <el-button
+          @click="()=>{ this.dialogs.isVisible = true;  }"
+          icon="el-icon-circle-plus-outline"
+          type="primary"
+        >{{$t('add')}}
+        </el-button>
+      </div>
       <div  v-if="isLoadGrid">
         <GridManager :option="gridOption" ref="tableGrid"></GridManager>
       </div>
     </div>
+
+    <el-dialog :visible.sync="dialogs.isVisible" :title="this.$t(this.dialogs.types)" width="35%">
+<!--      &lt;!&ndash;      类型&ndash;&gt;-->
+<!--      <el-form  label-width="80px" ref="form" size="medium" >-->
+<!--        <el-form-item :label="this.$t('type')">-->
+<!--          <el-select v-model="this.dialogs.select" :disabled="this.DialogAction !=='add'" style="width:30%" @change="TypeValueChoosed">-->
+<!--            <el-option-->
+<!--              v-for="item in TypeSelectList"-->
+<!--              :key="item.value"-->
+<!--              :label="item.label"-->
+<!--              :value="item">-->
+<!--              <span style="float: left">{{ item.label }}</span>-->
+
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        &lt;!&ndash;        数据源&ndash;&gt;-->
+<!--        <el-form-item :label="this.$t('dataSource')"   v-if="selectTypeValue.value==='Leaf'">-->
+<!--          <el-cascader  style="width:50%"-->
+<!--                        v-model="selectDataSourceValue"-->
+<!--                        :options="dataSourceList"-->
+<!--                        :disabled="this.DialogAction !=='add'"-->
+<!--                        :props="{ expandTrigger: 'hover' }"-->
+
+<!--          ></el-cascader>-->
+<!--        </el-form-item>-->
+<!--        &lt;!&ndash;        功能名&ndash;&gt;-->
+<!--        <el-form-item :label="this.$t('funcName')" style="width:50%">-->
+<!--          <el-input v-model="EditFuncName" placeholder="请输入内容" ></el-input>-->
+<!--        </el-form-item>-->
+<!--        &lt;!&ndash;        所在层级&ndash;&gt;-->
+<!--        <el-form-item :label="$t('parentFunc')">-->
+<!--          <el-select v-model="selectParentValue" :disabled="isDisableParentSelect" placeholder="请选择" value-key="label">-->
+<!--            <el-option-->
+<!--              v-for="item in parentFuncList"-->
+<!--              :key="item.value"-->
+<!--              :label="item.label"-->
+<!--              :value="item"-->
+<!--              :disabled="item.disabled">-->
+<!--              <span style="float: left">{{ item.label }}</span>-->
+<!--              &lt;!&ndash;              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>&ndash;&gt;-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
+      <span class="dialog-footer" slot="footer">
+                <el-button @click="() => { this.dialogs.isVisible = false }">取 消</el-button>
+
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -32,23 +90,20 @@ export default {
   data () {
     return {
       tableName: '表管理',
-      tableData: {
-        data: [],
-        totals: 0
-      },
-      defaultColName: ['Userid', 'UserNick', 'Username', 'IsActive', 'ClientType', 'CountryCode', 'DataJoined', 'Email',
-        'IsDelete', 'LastLogin', 'Phone', 'Remark', 'ThirdParty', 'Authority'],
-      selectValue: {},
-      selectParentValue: {},
-      addVisible: false,
-      editVisible: false,
-      funcList: [{
-        value: 'clientManage',
-        label: this.$t('clientManage')
-      }],
       isLoadGrid: false,
       gridOption: {},
-      parentFuncList: []
+      dialogs: {
+        isVisible: false,
+        types: 'add'
+      },
+      defaultCols: [{
+        key: 'del',
+        text: this.$t('action'),
+        template: () => {
+          return '<el-button size="mini"  @click="delRow(row)">删除 </el-button>'
+        }
+      }
+      ]
     }
   },
   components: {
@@ -83,26 +138,17 @@ export default {
         return item.field_name
       })
       // this.gridOption.columnData =
-      return tmpName.map(
+      const result = this.defaultCols
+      result.push(...tmpName.map(
         element => {
           return {
             key: element,
             text: element
           }
         }
-      )
+      ))
+      return result
     },
-    ParseColData () {
-      return this.defaultColName.map(
-        element => {
-          return {
-            key: element,
-            text: element
-          }
-        }
-      )
-    },
-
     async newData (page_, size_) {
       const tmpArr = this.$route.path.slice(7).split('|')
       const paramData = {
@@ -111,7 +157,7 @@ export default {
         DB: tmpArr[0],
         TB: tmpArr[1]
       }
-      var tmp = {}
+      const tmp = {}
       await getTableDataList(paramData).then(
         (responseData) => {
           if (responseData.Code !== 0) {
@@ -120,8 +166,7 @@ export default {
           const getData = responseData.Data
           const parseTimeFunc = (obj) => {
             const tmpDate = dayjs.unix(obj)
-            const tmp = tmpDate.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
-            return tmp
+            return tmpDate.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
           }
           const funcValidStr = (obj) => { return obj.Valid ? obj.String : '' }
           const funcValidTime = (obj) => {
@@ -147,24 +192,12 @@ export default {
           }
           )
           tmp.totals = responseData.Totals
-          // tmp.totals = responseData.
         }
       )
       return tmp
     },
-    updateRow (row) {
-    },
-    addDialog () {
-      this.addVisible = true
-    },
-    addFun () {
-      this.tableData.data.push({
-        funcName: this.selectValue.label,
-        parentName: this.selectParentValue.label
-      })
-      this.tableData.totals++
-      this.addVisible = false
-      GridManager.refreshGrid(this.gridOption.gridManagerName)
+    async delRow (row) {
+
     }
   },
   watch: {
