@@ -279,6 +279,8 @@ export default {
         const res = await getTableConfig({ DB: tmpArr[0], TB: tmpArr[1] })
         if (res.Code === 0) {
           this.tableConfig = res.Data.map(item => {
+            delete item.is_key
+            delete item.is_able_null
             item.newName = item.field_name
             item.action = 'keep'
             return item

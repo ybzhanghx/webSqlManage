@@ -22,7 +22,8 @@ module.exports = function (/* ctx */) {
       'elementUiConf',
       'axios',
       'i18n',
-      'routerAuth'
+      'routerAuth',
+      'vxetableImport'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

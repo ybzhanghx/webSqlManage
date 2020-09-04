@@ -29,7 +29,7 @@ export default async function setroute () {
         },
         {
           path: '/table/:name',
-          component: () => import('pages/tableManage'),
+          component: () => import('pages/tableManage2'),
           meta: { title: '数据管理' },
           props: { subtitle: ' ' }
         },

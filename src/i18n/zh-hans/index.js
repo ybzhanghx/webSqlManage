@@ -2,6 +2,7 @@ export default {
   Loading: 'Loading',
   successfulinitdata: '初始化成功,请刷新浏览器',
   add: '添加',
+  save: '保存',
   type: '类型',
   askSelect: '请选择',
   // dataStruct
@@ -26,7 +27,8 @@ export default {
   Email: '邮箱',
   'User Email': '用户邮箱',
   'Account name': '账号名称',
-
+  SerialNumber: '序号',
+  "can't is null": '不可为空',
   // Menu
   'System settings': '系统设置',
   'Article management': '文章管理',

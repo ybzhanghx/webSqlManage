@@ -15,3 +15,5 @@ export const getTableConfig = data => fetch(host + '/v1/table/TableConfig', data
 export const getTableNames = data => fetch(host + '/v1/funcList/getAllTables', data, 'GET')
 
 export const UpdateTableConfig = data => fetch(host + '/v1/table/updateTableConfig', data, 'POST')
+
+export const UpdateTableData = data => fetch(host + '/v1/table/updateTableData', data, 'POST')
