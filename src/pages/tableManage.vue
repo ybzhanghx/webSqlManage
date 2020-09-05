@@ -1,16 +1,6 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> {{ tableName}}
-        </el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
     <div class="container" >
-<!--      <div  v-if="isLoadGrid">-->
-<!--        <GridManager :option="gridOption" ref="tableGrid"></GridManager>-->
-<!--      </div>-->
       <div  >
         <vxe-grid ref="xGrid" v-bind = "gridOptions"></vxe-grid>
       </div>
@@ -27,9 +17,6 @@ import timezone from 'dayjs/plugin/timezone'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
-// const dayjs =
-// const utc = require('dayjs/plugin/utc') // dependent on utc plugin
-// const timezone = require('dayjs/plugin/timezone')
 export default {
   data () {
     return {
@@ -43,7 +30,6 @@ export default {
         highlightHoverRow: true,
         keepSource: true,
         id: 'full_edit_1',
-        height: 600,
         rowId: 'id',
         customConfig: {
           storage: true
@@ -102,16 +88,6 @@ export default {
           range: true
         },
         editRules: {
-          // name: [
-          //   { required: true, message: 'app.body.valid.rName' },
-          //   { min: 3, max: 50, message: '名称长度在 3 到 50 个字符' }
-          // ],
-          // email: [
-          //   { required: true, message: '邮件必须填写' }
-          // ],
-          // role: [
-          //   { required: true, message: '角色必须填写' }
-          // ]
         },
         editConfig: {
           trigger: 'click',

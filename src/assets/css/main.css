@@ -46,10 +46,10 @@ a {
 }
 
 .container {
-  padding: 30px;
+  padding: 0.5em;
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 0.01em solid #ddd;
+  border-radius: 0.5em;
 }
 
 .crumbs {

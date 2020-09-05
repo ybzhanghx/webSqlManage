@@ -1,12 +1,5 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 功能管理
-        </el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
     <div class="container">
       <div class="handle-box">
         <el-button
@@ -83,8 +76,7 @@
 </template>
 
 <script>
-// import {fetchData} from '../../api/index';
-// import bus from '../components/common/bus'
+
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
@@ -354,33 +346,6 @@ export default {
       this.addVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
     }
-    // 以下方法是必需的
-    // (不要改变它的名称 --> "hide")
-    // hide () {
-    //   this.$refs.dialog.show()
-    // },
-    //
-    // onDialogHide () {
-    //   // QDialog发出“hide”事件时
-    //   // 需要发出
-    //   this.$emit('hide')
-    // },
-    //
-    // onOKClick () {
-    //   // 按OK，在隐藏QDialog之前
-    //   // 发出“ok”事件（带有可选的有效负载）
-    //   // 是必需的
-    //   this.$emit('ok')
-    //   // 或带有有效负载：this.$emit('ok', { ... })
-    //
-    //   // 然后隐藏对话框
-    //   this.show()
-    // },
-    //
-    // onCancelClick () {
-    //   // 我们只需要隐藏对话框
-    //   this.hide()
-    // }
   }
 }
 </script>
