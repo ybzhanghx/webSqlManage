@@ -5,9 +5,9 @@ const WConfig = {
     IDLE_TIME: 10
   },
   test: {
-    BASE_API_URL: 'http://192.168.1.88:8095',
+    BASE_API_URL: 'http://192.168.10.18:8095',
     IDLE_TIME: 10
   },
-  chooseEnv: 'prod'
+  chooseEnv: 'test'
 }
 export default WConfig

@@ -1,8 +1,8 @@
 Arguments: 
-  D:\Program Files\nodejs\node.exe C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js run dev
+  D:\Program Files\nodejs\node.exe C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add XEAjax
 
 PATH: 
-  D:\Qt\Qt5.14.2\Tools\mingw730_64\bin;D:\Qt\Qt5.14.2\Tools\mingw730_64\lib;D:\Qt\Qt5.14.2\5.14.2\mingw73_64\lib;D:\Qt\Qt5.14.2\5.14.2\mingw73_64\bin;C:\Program Files\VanDyke Software\Clients\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;D:\Program\go\bin;C:\Program Files\Git\cmd;C:\Program Files\TortoiseSVN\bin;D:\Program Files\nodejs\;C:\Program Files (x86)\Graphviz2.38\bin;D:\ProgramFiles\erl10.7\bin;C:\mingw64\bin;C:\Program Files\Git\bin;C:\Program Files\Java\jdk-14\bin;D:\Program\anaconda3;D:\Program\anaconda3\Scripts;D:\Program\anaconda3\Library\bin;C:\Program Files\TortoiseGit\bin;C:\Users\Admin\.cargo\bin;D:\myconfig;D:\Program Files (x86)\Lua\5.1;D:\Program Files (x86)\Lua\5.1\clibs;C:\Program Files (x86)\Graphviz2.38\bin;D:\coding\go\bin;D:\android-sdk-windows\platform-tools;D:\android-sdk-windows\tools;C:\q\w64;D:\Program Files\Dart\dart-sdk\bin;C:\Program Files (x86)\Windows Kits\8.1\bin\x64;D:\Qt\Qt5.14.2\5.14.2\msvc2015_64\bin;C:\Users\Admin\.cargo\bin;C:\Users\Admin\AppData\Local\Microsoft\WindowsApps;D:\Program Files (x86)\Microsoft VS Code\bin;C:\Users\Admin\go\bin;C:\Users\Admin\AppData\Roaming\npm;C:\Program Files (x86)\Graphviz2.38\bin;D:\ProgramFiles\erl10.7\bin;C:\mingw64\bin;C:\Program Files\Git\bin;D:\myconfig;C:\Program Files (x86)\Graphviz2.38\bin;D:\coding\go\bin;D:\android-sdk-windows\tools;D:\android-sdk-windows\platform-tools;C:\Users\Admin\AppData\Local\Programs\Fiddler;C:\q\w64;
+  D:\Qt\Qt5.14.2\Tools\mingw730_64\bin;D:\Qt\Qt5.14.2\Tools\mingw730_64\lib;D:\Qt\Qt5.14.2\5.14.2\mingw73_64\lib;D:\Qt\Qt5.14.2\5.14.2\mingw73_64\bin;C:\Program Files\VanDyke Software\Clients\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;D:\Program\go\bin;C:\Program Files\Git\cmd;C:\Program Files\TortoiseSVN\bin;D:\Program Files\nodejs\;C:\Program Files (x86)\Graphviz2.38\bin;D:\ProgramFiles\erl10.7\bin;C:\mingw64\bin;C:\Program Files\Git\bin;C:\Program Files\Java\jdk-14\bin;D:\Program\anaconda3;D:\Program\anaconda3\Scripts;D:\Program\anaconda3\Library\bin;C:\Program Files\TortoiseGit\bin;C:\Users\Admin\.cargo\bin;D:\myconfig;D:\Program Files (x86)\Lua\5.1;D:\Program Files (x86)\Lua\5.1\clibs;C:\Program Files (x86)\Graphviz2.38\bin;D:\coding\go\bin;D:\android-sdk-windows\platform-tools;D:\android-sdk-windows\tools;C:\q\w64;D:\Program Files\Dart\dart-sdk\bin;C:\Program Files (x86)\Windows Kits\8.1\bin\x64;D:\Qt\Qt5.14.2\5.14.2\msvc2015_64\bin;C:\Users\Admin\.cargo\bin;C:\Users\Admin\AppData\Local\Microsoft\WindowsApps;D:\Program Files (x86)\Microsoft VS Code\bin;C:\Users\Admin\go\bin;C:\Users\Admin\AppData\Roaming\npm;C:\Program Files (x86)\Graphviz2.38\bin;D:\ProgramFiles\erl10.7\bin;C:\mingw64\bin;C:\Program Files\Git\bin;D:\myconfig;C:\Program Files (x86)\Graphviz2.38\bin;D:\coding\go\bin;D:\android-sdk-windows\tools;D:\android-sdk-windows\platform-tools;C:\Users\Admin\AppData\Local\Programs\Fiddler;C:\q\w64;C:\Users\Admin\AppData\Local\atom\bin
 
 Yarn version: 
   1.22.4
@@ -14,12 +14,17 @@ Platform:
   win32 x64
 
 Trace: 
-  SyntaxError: D:\coding\front\manage_qa\package.json: Unexpected token ` in JSON at position 252
-      at JSON.parse (<anonymous>)
-      at C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
-      at C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
+  Error: https://registry.npm.taobao.org/XEAjax: Not found
+      at Request.params.callback [as _callback] (C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66987:18)
+      at Request.self.callback (C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140748:22)
+      at Request.emit (events.js:311:20)
+      at Request.<anonymous> (C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141720:10)
+      at Request.emit (events.js:311:20)
+      at IncomingMessage.<anonymous> (C:\Users\Admin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141642:12)
+      at Object.onceWrapper (events.js:417:28)
+      at IncomingMessage.emit (events.js:323:22)
+      at endReadableNT (_stream_readable.js:1204:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
 
 npm manifest: 
   {
@@ -31,7 +36,7 @@ npm manifest:
     "private": true,
     "scripts": {
       "dev": "quasar dev",
-      "build": "quasar build",`
+      "build": "quasar build",
       "lint": "eslint --ext .js,.vue ./",
       "test": "echo \"No test specified\" && exit 0"
     },
@@ -39,13 +44,21 @@ npm manifest:
       "@quasar/extras": "^1.0.0",
       "axios": "^0.19.2",
       "babel-polyfill": "^6.26.0",
+      "codemirror": "^5.56.0",
       "core-js": "^3.6.5",
+      "coroutine": "^0.3.1",
+      "dayjs": "^1.8.34",
+      "default-passive-events": "^2.0.0",
       "element-ui": "^2.13.2",
       "gridmanager": "latest",
       "gridmanager-vue": "^1.6.2",
+      "jsonlint": "^1.6.3",
       "quasar": "^1.0.0",
       "vue-i18n": "^8.20.0",
-      "webpack": "^4.44.1"
+      "vuex": "latest",
+      "vxe-table": "^2.9.19",
+      "webpack": "^4.44.1",
+      "xe-utils": "^2.7.8"
     },
     "devDependencies": {
       "@quasar/app": "^2.0.0",
@@ -58,7 +71,9 @@ npm manifest:
       "eslint-plugin-promise": "^4.0.1",
       "eslint-plugin-standard": "^4.0.0",
       "eslint-plugin-vue": "^6.1.2",
-      "vue-loader": "^15.9.3"
+      "script-loader": "^0.7.2",
+      "vue-loader": "^15.9.3",
+      "vue-template-compiler": "^2.6.11"
     },
     "browserslist": [
       "last 10 Chrome versions",
@@ -1564,6 +1579,11 @@ Lockfile:
     resolved "https://registry.npm.taobao.org/@xtuc/long/download/@xtuc/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
     integrity sha1-0pHGpOl5ibXGHZrPOWrk/hM6cY0=
   
+  JSV@^4.0.x:
+    version "4.0.2"
+    resolved "https://registry.npm.taobao.org/JSV/download/JSV-4.0.2.tgz#d077f6825571f82132f9dffaed587b4029feff57"
+    integrity sha1-0Hf2glVx+CEy+d/67Vh7QCn+/1c=
+  
   abbrev@1:
     version "1.1.1"
     resolved "https://registry.npm.taobao.org/abbrev/download/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -1691,6 +1711,11 @@ Lockfile:
     dependencies:
       "@types/color-name" "^1.1.1"
       color-convert "^2.0.1"
+  
+  ansi-styles@~1.0.0:
+    version "1.0.0"
+    resolved "https://registry.npm.taobao.org/ansi-styles/download/ansi-styles-1.0.0.tgz?cache=0&sync_timestamp=1589682811931&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fansi-styles%2Fdownload%2Fansi-styles-1.0.0.tgz#cb102df1c56f5123eab8b67cd7b98027a0279178"
+    integrity sha1-yxAt8cVvUSPquLZ817mAJ6AnkXg=
   
   anymatch@^2.0.0:
     version "2.0.0"
@@ -2506,6 +2531,15 @@ Lockfile:
       ansi-styles "^4.1.0"
       supports-color "^7.1.0"
   
+  chalk@~0.4.0:
+    version "0.4.0"
+    resolved "https://registry.npm.taobao.org/chalk/download/chalk-0.4.0.tgz#5199a3ddcd0c1efe23bc08c1b027b06176e0c64f"
+    integrity sha1-UZmj3c0MHv4jvAjBsCewYXbgxk8=
+    dependencies:
+      ansi-styles "~1.0.0"
+      has-color "~0.1.0"
+      strip-ansi "~0.1.0"
+  
   chardet@^0.7.0:
     version "0.7.0"
     resolved "https://registry.npm.taobao.org/chardet/download/chardet-0.7.0.tgz?cache=0&sync_timestamp=1594010664806&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fchardet%2Fdownload%2Fchardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
@@ -2681,6 +2715,11 @@ Lockfile:
     version "1.1.0"
     resolved "https://registry.npm.taobao.org/code-point-at/download/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
     integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
+  
+  codemirror@^5.56.0:
+    version "5.56.0"
+    resolved "https://registry.npm.taobao.org/codemirror/download/codemirror-5.56.0.tgz#675640fcc780105cd22d3faa738b5d7ea6426f61"
+    integrity sha1-Z1ZA/MeAEFzSLT+qc4tdfqZCb2E=
   
   collection-visit@^1.0.0:
     version "1.0.0"
@@ -2953,6 +2992,11 @@ Lockfile:
     version "1.0.2"
     resolved "https://registry.npm.taobao.org/core-util-is/download/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
     integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+  
+  coroutine@^0.3.1:
+    version "0.3.1"
+    resolved "https://registry.npm.taobao.org/coroutine/download/coroutine-0.3.1.tgz#b3e619f6a22029e0c61141774c2732708da4a809"
+    integrity sha1-s+YZ9qIgKeDGEUF3TCcycI2kqAk=
   
   cosmiconfig@^5.0.0:
     version "5.2.1"
@@ -3254,6 +3298,11 @@ Lockfile:
     dependencies:
       assert-plus "^1.0.0"
   
+  dayjs@^1.8.34:
+    version "1.8.34"
+    resolved "https://registry.npm.taobao.org/dayjs/download/dayjs-1.8.34.tgz?cache=0&sync_timestamp=1597892492786&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdayjs%2Fdownload%2Fdayjs-1.8.34.tgz#d3ad33cc43d6b0f24cb8686b90aad2c653708069"
+    integrity sha1-060zzEPWsPJMuGhrkKrSxlNwgGk=
+  
   de-indent@^1.0.2:
     version "1.0.2"
     resolved "https://registry.npm.taobao.org/de-indent/download/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -3333,6 +3382,11 @@ Lockfile:
     dependencies:
       execa "^1.0.0"
       ip-regex "^2.1.0"
+  
+  default-passive-events@^2.0.0:
+    version "2.0.0"
+    resolved "https://registry.npm.taobao.org/default-passive-events/download/default-passive-events-2.0.0.tgz#79b1aa67becbaab38b718469b5480fef92eda649"
+    integrity sha1-ebGqZ77LqrOLcYRptUgP75Ltpkk=
   
   defer-to-connect@^1.0.1:
     version "1.1.3"
@@ -4705,6 +4759,11 @@ Lockfile:
     dependencies:
       ansi-regex "^2.0.0"
   
+  has-color@~0.1.0:
+    version "0.1.7"
+    resolved "https://registry.npm.taobao.org/has-color/download/has-color-0.1.7.tgz#67144a5260c34fc3cca677d041daf52fe7b78b2f"
+    integrity sha1-ZxRKUmDDT8PMpnfQQdr1L+e3iy8=
+  
   has-flag@^3.0.0:
     version "3.0.0"
     resolved "https://registry.npm.taobao.org/has-flag/download/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
@@ -5619,6 +5678,14 @@ Lockfile:
     optionalDependencies:
       graceful-fs "^4.1.6"
   
+  jsonlint@^1.6.3:
+    version "1.6.3"
+    resolved "https://registry.npm.taobao.org/jsonlint/download/jsonlint-1.6.3.tgz#cb5e31efc0b78291d0d862fbef05900adf212988"
+    integrity sha1-y14x78C3gpHQ2GL77wWQCt8hKYg=
+    dependencies:
+      JSV "^4.0.x"
+      nomnom "^1.5.x"
+  
   jsprim@^1.2.2:
     version "1.4.1"
     resolved "https://registry.npm.taobao.org/jsprim/download/jsprim-1.4.1.tgz#313e66bc1e5cc06e438bc1b7499c2e5c56acb6a2"
@@ -6428,6 +6495,14 @@ Lockfile:
       sass-graph "2.2.5"
       stdout-stream "^1.4.0"
       "true-case-path" "^1.0.2"
+  
+  nomnom@^1.5.x:
+    version "1.8.1"
+    resolved "https://registry.npm.taobao.org/nomnom/download/nomnom-1.8.1.tgz#2151f722472ba79e50a76fc125bb8c8f2e4dc2a7"
+    integrity sha1-IVH3Ikcrp55Qp2/BJbuMjy5Nwqc=
+    dependencies:
+      chalk "~0.4.0"
+      underscore "~1.6.0"
   
   "nopt@2 || 3":
     version "3.0.6"
@@ -7630,6 +7705,11 @@ Lockfile:
       iconv-lite "0.4.24"
       unpipe "1.0.0"
   
+  raw-loader@~0.5.1:
+    version "0.5.1"
+    resolved "https://registry.npm.taobao.org/raw-loader/download/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
+    integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
+  
   read-pkg-up@^1.0.1:
     version "1.0.1"
     resolved "https://registry.npm.taobao.org/read-pkg-up/download/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"
@@ -8110,6 +8190,13 @@ Lockfile:
       "@types/json-schema" "^7.0.4"
       ajv "^6.12.2"
       ajv-keywords "^3.4.1"
+  
+  script-loader@^0.7.2:
+    version "0.7.2"
+    resolved "https://registry.npm.taobao.org/script-loader/download/script-loader-0.7.2.tgz#2016db6f86f25f5cf56da38915d83378bb166ba7"
+    integrity sha1-IBbbb4byX1z1baOJFdgzeLsWa6c=
+    dependencies:
+      raw-loader "~0.5.1"
   
   scss-tokenizer@^0.2.3:
     version "0.2.3"
@@ -8707,6 +8794,11 @@ Lockfile:
     dependencies:
       ansi-regex "^4.1.0"
   
+  strip-ansi@~0.1.0:
+    version "0.1.1"
+    resolved "https://registry.npm.taobao.org/strip-ansi/download/strip-ansi-0.1.1.tgz?cache=0&sync_timestamp=1589682795383&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fstrip-ansi%2Fdownload%2Fstrip-ansi-0.1.1.tgz#39e8a98d044d150660abe4a6808acf70bb7bc991"
+    integrity sha1-OeipjQRNFQZgq+SmgIrPcLt7yZE=
+  
   strip-bom@^2.0.0:
     version "2.0.0"
     resolved "https://registry.npm.taobao.org/strip-bom/download/strip-bom-2.0.0.tgz#6219a85616520491f35788bdbf1447a99c7e6b0e"
@@ -9135,6 +9227,11 @@ Lockfile:
     resolved "https://registry.npm.taobao.org/uglify-js/download/uglify-js-3.10.1.tgz?cache=0&sync_timestamp=1596387201241&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuglify-js%2Fdownload%2Fuglify-js-3.10.1.tgz#dd14767eb7150de97f2573a5ff210db14fffe4ad"
     integrity sha1-3RR2frcVDel/JXOl/yENsU//5K0=
   
+  underscore@~1.6.0:
+    version "1.6.0"
+    resolved "https://registry.npm.taobao.org/underscore/download/underscore-1.6.0.tgz#8b38b10cacdef63337b8b24e4ff86d45aea529a8"
+    integrity sha1-izixDKze9jM3uLJOT/htRa6lKag=
+  
   unicode-canonical-property-names-ecmascript@^1.0.4:
     version "1.0.4"
     resolved "https://registry.npm.taobao.org/unicode-canonical-property-names-ecmascript/download/unicode-canonical-property-names-ecmascript-1.0.4.tgz#2619800c4c825800efdd8343af7dd9933cbe2818"
@@ -9444,7 +9541,7 @@ Lockfile:
       hash-sum "^1.0.2"
       loader-utils "^1.0.2"
   
-  vue-template-compiler@2.6.11:
+  vue-template-compiler@2.6.11, vue-template-compiler@^2.6.11:
     version "2.6.11"
     resolved "https://registry.npm.taobao.org/vue-template-compiler/download/vue-template-compiler-2.6.11.tgz#c04704ef8f498b153130018993e56309d4698080"
     integrity sha1-wEcE749JixUxMAGJk+VjCdRpgIA=
@@ -9466,6 +9563,16 @@ Lockfile:
     version "3.4.0"
     resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
     integrity sha1-IMwIYGLXUHafzh/rs05/zurr3kU=
+  
+  vuex@latest:
+    version "3.5.1"
+    resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.5.1.tgz#f1b8dcea649bc25254cf4f4358081dbf5da18b3d"
+    integrity sha1-8bjc6mSbwlJUz09DWAgdv12hiz0=
+  
+  vxe-table@^2.9.19:
+    version "2.9.19"
+    resolved "https://registry.npm.taobao.org/vxe-table/download/vxe-table-2.9.19.tgz#9ff2c5e871b972103875990442c903dda13bedac"
+    integrity sha1-n/LF6HG5chA4dZkEQskD3aE77aw=
   
   watchpack-chokidar2@^2.0.0:
     version "2.0.0"
@@ -9784,6 +9891,11 @@ Lockfile:
     integrity sha1-RC/fCkftZPWbal2P8TD0dI7VJPs=
     dependencies:
       async-limiter "~1.0.0"
+  
+  xe-utils@^2.7.8:
+    version "2.7.8"
+    resolved "https://registry.npm.taobao.org/xe-utils/download/xe-utils-2.7.8.tgz#c8df5ac56be3c47a76ea9e8af55b4a051d89ea5e"
+    integrity sha1-yN9axWvjxHp26p6K9VtKBR2J6l4=
   
   xmlbuilder@^9.0.7:
     version "9.0.7"

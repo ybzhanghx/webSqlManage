@@ -8,79 +8,23 @@
       </el-breadcrumb>
     </div>
     <div class="container" >
-      <div class="handle-box">
-        <el-button
-          @click="()=>{ this.dialogs.isVisible = true;  }"
-          icon="el-icon-circle-plus-outline"
-          type="primary"
-        >{{$t('add')}}
-        </el-button>
-      </div>
-      <div  v-if="isLoadGrid">
-        <GridManager :option="gridOption" ref="tableGrid"></GridManager>
+<!--      <div  v-if="isLoadGrid">-->
+<!--        <GridManager :option="gridOption" ref="tableGrid"></GridManager>-->
+<!--      </div>-->
+      <div  >
+        <vxe-grid ref="xGrid" v-bind = "gridOptions"></vxe-grid>
       </div>
     </div>
-
-    <el-dialog :visible.sync="dialogs.isVisible" :title="this.$t(this.dialogs.types)" width="35%">
-<!--      &lt;!&ndash;      类型&ndash;&gt;-->
-<!--      <el-form  label-width="80px" ref="form" size="medium" >-->
-<!--        <el-form-item :label="this.$t('type')">-->
-<!--          <el-select v-model="this.dialogs.select" :disabled="this.DialogAction !=='add'" style="width:30%" @change="TypeValueChoosed">-->
-<!--            <el-option-->
-<!--              v-for="item in TypeSelectList"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item">-->
-<!--              <span style="float: left">{{ item.label }}</span>-->
-
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        &lt;!&ndash;        数据源&ndash;&gt;-->
-<!--        <el-form-item :label="this.$t('dataSource')"   v-if="selectTypeValue.value==='Leaf'">-->
-<!--          <el-cascader  style="width:50%"-->
-<!--                        v-model="selectDataSourceValue"-->
-<!--                        :options="dataSourceList"-->
-<!--                        :disabled="this.DialogAction !=='add'"-->
-<!--                        :props="{ expandTrigger: 'hover' }"-->
-
-<!--          ></el-cascader>-->
-<!--        </el-form-item>-->
-<!--        &lt;!&ndash;        功能名&ndash;&gt;-->
-<!--        <el-form-item :label="this.$t('funcName')" style="width:50%">-->
-<!--          <el-input v-model="EditFuncName" placeholder="请输入内容" ></el-input>-->
-<!--        </el-form-item>-->
-<!--        &lt;!&ndash;        所在层级&ndash;&gt;-->
-<!--        <el-form-item :label="$t('parentFunc')">-->
-<!--          <el-select v-model="selectParentValue" :disabled="isDisableParentSelect" placeholder="请选择" value-key="label">-->
-<!--            <el-option-->
-<!--              v-for="item in parentFuncList"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item"-->
-<!--              :disabled="item.disabled">-->
-<!--              <span style="float: left">{{ item.label }}</span>-->
-<!--              &lt;!&ndash;              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>&ndash;&gt;-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--      </el-form>-->
-      <span class="dialog-footer" slot="footer">
-                <el-button @click="() => { this.dialogs.isVisible = false }">取 消</el-button>
-
-            </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-// import {fetchData} from '../../api/index';
-import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
-import { getTableConfig, getTableDataList } from '../api/api'
+import { getTableConfig, getTableDataList, UpdateTableData } from '../api/api'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+
 dayjs.extend(utc)
 dayjs.extend(timezone)
 // const dayjs =
@@ -89,65 +33,144 @@ dayjs.extend(timezone)
 export default {
   data () {
     return {
-      tableName: '表管理',
-      isLoadGrid: false,
-      gridOption: {},
-      dialogs: {
-        isVisible: false,
-        types: 'add'
-      },
-      defaultCols: [{
-        key: 'del',
-        text: this.$t('action'),
-        template: () => {
-          return '<el-button size="mini"  @click="delRow(row)">删除 </el-button>'
+      tableName: 'test',
+      colunmsData: {},
+      gridOptions: {
+        border: true, // 有边框
+        resizable: true, // 可拖动列宽大小
+        showHeaderOverflow: true,
+        showOverflow: true, // 当内容过长时显示为省略号
+        highlightHoverRow: true,
+        keepSource: true,
+        id: 'full_edit_1',
+        height: 600,
+        rowId: 'id',
+        customConfig: {
+          storage: true
+        },
+
+        sortConfig: {
+          trigger: 'cell'
+        },
+        filterConfig: {
+          remote: true
+        },
+        pagerConfig: {
+          pageSize: 10,
+          pageSizes: [5, 10, 15, 20, 50, 100, 200, 500, 1000]
+        },
+
+        toolbar: {
+          buttons: [
+            { code: 'insert_actived', name: '新增', icon: 'fa fa-plus' },
+            // { code: 'delete', name: '直接删除', icon: 'fa fa-trash-o' },
+            { code: 'mark_cancel', name: '删除/取消', icon: 'fa fa-trash-o' },
+            { code: 'save', name: this.$t('save'), icon: 'fa fa-save', status: 'success' }
+          ],
+          refresh: true,
+          // import: true,
+          // export: true,
+          // print: true,
+          zoom: true,
+          custom: true
+        },
+        proxyConfig: {
+          // seq: true, // 启用动态序号代理
+          sort: true, // 启用排序代理
+          filter: true, // 启用筛选代理
+          // form: true, // 启用表单代理
+          ajax: {
+            // 任何支持 Promise API 的库都可以对接（fetch、jquery、axios、xe-ajax）
+            query: ({ page, sort, filters, form }) => {
+              // 处理排序条件
+              return this.newData(page.currentPage, page.pageSize)
+              // return XEAjax.get(`https://api.xuliangzhan.com:10443/api/pub/page/list/${page.pageSize}/${page.currentPage}`, queryParams)
+            },
+            delete: ({ body }) => {
+              console.log(body)
+            },
+            save: ({ body }) => {
+              console.log(body)
+              return this.saveData(body)
+            }
+          }
+        },
+        checkboxConfig: {
+          labelField: 'id',
+          reserve: true,
+          highlight: true,
+          range: true
+        },
+        editRules: {
+          // name: [
+          //   { required: true, message: 'app.body.valid.rName' },
+          //   { min: 3, max: 50, message: '名称长度在 3 到 50 个字符' }
+          // ],
+          // email: [
+          //   { required: true, message: '邮件必须填写' }
+          // ],
+          // role: [
+          //   { required: true, message: '角色必须填写' }
+          // ]
+        },
+        editConfig: {
+          trigger: 'click',
+          mode: 'row',
+          showStatus: true
         }
       }
-      ]
     }
   },
-  components: {
-    GridManager
-  },
   created () {
-    var tmpThis = this
-    this.getColName().then(value => {
-      tmpThis.gridOption = {
-        gridManagerName: this.$route.path.slice(7),
-        height: '100%',
-        // firstLoading: true,
-        pageSize: 3,
-        columnData: value,
-        supportAjaxPage: true,
-        supportConfig: true,
-        ajaxData: function (settings, params) {
-          return tmpThis.newData(params.cPage, params.pSize)
-        }
-      }
-      tmpThis.isLoadGrid = true
-    })
+    this.initInfo()
   },
   methods: {
-    async getColName () {
+    initInfo () {
+      this.setColumns()
+    },
+    async setColumns () {
       const tmpArr = this.$route.path.slice(7).split('|')
       const res = await getTableConfig({ DB: tmpArr[0], TB: tmpArr[1] })
       if (res.Code !== 0) {
         this.$message.error('table load error !')
       }
-      const tmpName = res.Data.map(item => {
-        return item.field_name
-      })
-      // this.gridOption.columnData =
-      const result = this.defaultCols
-      result.push(...tmpName.map(
-        element => {
-          return {
-            key: element,
-            text: element
+      this.columnData = res.Data
+      const colCfg = [
+        {
+          type: 'checkbox',
+          field: 'id',
+          title: 'id',
+          width: 120
+        }
+      ]
+      const ruleCfg = {}
+
+      for (const node of res.Data) {
+        if (node.field_name.toLowerCase() === 'id') { continue }
+        const tmp = {
+          editRender: { name: 'input' },
+          field: node.field_name,
+          title: node.field_name
+        }
+        if (node.data_type === 'datetime') {
+          tmp.editRender.name = '$input'
+          tmp.editRender.props = {
+            type: 'datetime'
+          }
+        } else if (node.data_type.indexOf('int') > 0) {
+          tmp.editRender.name = '$input'
+          tmp.editRender.props = {
+            type: 'number'
           }
         }
-      ))
-      return result
+        console.log(node)
+        colCfg.push(tmp)
+        if (node.is_able_null === false && node.data_type !== 'datetime') {
+          ruleCfg[node.field_name] = [{ required: true, message: this.$t("can't is null") }]
+        }
+      }
+      this.gridOptions.columns = colCfg
+      this.gridOptions.editRules = ruleCfg
     },
     async newData (page_, size_) {
       const tmpArr = this.$route.path.slice(7).split('|')
@@ -158,58 +181,133 @@ export default {
         TB: tmpArr[1]
       }
       const tmp = {}
-      await getTableDataList(paramData).then(
-        (responseData) => {
-          if (responseData.Code !== 0) {
-            return
-          }
-          const getData = responseData.Data
-          const parseTimeFunc = (obj) => {
-            const tmpDate = dayjs.unix(obj)
-            return tmpDate.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
-          }
-          const funcValidStr = (obj) => { return obj.Valid ? obj.String : '' }
-          const funcValidTime = (obj) => {
-            return obj.Valid ? parseTimeFunc(obj.TimeStamp) : ''
-          }
-          tmp.data = getData.map(item => {
-            for (const fieldItem of responseData.Fields) {
-              if (fieldItem.AbleNull) {
-                let parseFunc = (obj) => {}
-                switch (fieldItem.TypeName) {
-                  case 'time': parseFunc = funcValidTime; break
-                  case 'string':parseFunc = funcValidStr; break
-                }
-                const tmpV = parseFunc(item[fieldItem.FieldName])
-                item[fieldItem.FieldName] = tmpV
-              } else {
-                if (fieldItem.TypeName === 'time') {
-                  item[fieldItem.FieldName] = funcValidTime(item[fieldItem.FieldName])
-                }
-              }
+      const responseData = await getTableDataList(paramData)
+      if (responseData.Code !== 0) {
+        return
+      }
+      const getData = responseData.Data
+      const parseTimeFunc = (obj) => {
+        const tmpDate = dayjs.unix(obj)
+        return tmpDate.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
+      }
+      const funcValidStr = (obj) => { return obj.Valid ? obj.String : '' }
+      const funcValidTime = (obj) => {
+        return obj.Valid ? parseTimeFunc(obj.TimeStamp) : ''
+      }
+      tmp.result = getData.map(item => {
+        for (const fieldItem of responseData.Fields) {
+          if (fieldItem.AbleNull) {
+            let parseFunc = (obj) => {}
+            switch (fieldItem.TypeName) {
+              case 'time': parseFunc = funcValidTime; break
+              case 'string':parseFunc = funcValidStr; break
             }
-            return item
+            const tmpV = parseFunc(item[fieldItem.FieldName])
+            item[fieldItem.FieldName] = tmpV
+          } else {
+            if (fieldItem.TypeName === 'time') {
+              item[fieldItem.FieldName] = funcValidTime(item[fieldItem.FieldName])
+            }
           }
-          )
-          tmp.totals = responseData.Totals
         }
+        return item
+      }
       )
+      tmp.page = {
+        total: responseData.Totals,
+        currentPage: page_,
+        pageSize: size_
+      }
       return tmp
     },
-    async delRow (row) {
+    async saveData (body) {
+      const result = {
+        insertRows: body.insertRecords.length
+      }
+      const tmpArr = this.$route.path.slice(7).split('|')
+      const postData = {
+        Add: this.saveAdd(body.insertRecords),
+        Del: this.saveDel(body.pendingRecords),
+        Upd: this.saveUpd(body.updateRecords),
+        DB: tmpArr[0],
+        TB: tmpArr[1]
+      }
+      var res = {}
+      try {
+        res = await UpdateTableData(postData)
+      } catch (e) {
+        console.log(e)
+        return e
+      }
 
+      result.code = res.Code
+      result.message = res.Msg
+      if (res.Code !== 0) {
+        throw result
+      }
+      // result.status = 200
+      return result
+    },
+    saveAdd (data) {
+      if (data.length === 0) {
+        return ''
+      }
+      const resData = data.map(item => {
+        item.id = 0
+        for (const fieldItem of this.columnData) {
+          if (fieldItem.data_type.indexOf('int') > 0) {
+            item[fieldItem.field_name] = parseInt(item[fieldItem.field_name])
+          }
+        }
+        return item
+      })
+      return JSON.stringify(resData)
+    },
+    saveUpd (data) {
+      if (data.length === 0) {
+        return ''
+      }
+
+      const resData = data.map(item => {
+        for (const fieldItem of this.columnData) {
+          if (fieldItem.data_type.indexOf('int') > 0 && fieldItem.data_type !== 'id') {
+            item[fieldItem.field_name] = parseInt(item[fieldItem.field_name])
+          }
+        }
+        return item
+      })
+      return JSON.stringify(resData)
+    },
+    saveDel (data) {
+      if (data.length === 0) {
+        return []
+      }
+      return data.map(v => {
+        return v.id
+      })
     }
+    // formatAmount ({ cellValue }) {
+    //   return cellValue ? `$${XEUtils.commafy(XEUtils.toNumber(cellValue), { digits: 2 })}` : ''
+    // },
+    // formatDate ({ cellValue }) {
+    //   return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:ss:mm')
+    // },
+    // checkColumnMethod ({ column }) {
+    //   if (['nickname', 'role'].includes(column.property)) {
+    //     return false
+    //   }
+    //   return true
+    // },
   },
   watch: {
-    async $route (to, from) {
-      this.isLoadGrid = false
-      const value = await this.getColName()
-      this.gridOption.gridManagerName = to.path.slice(7)
-      this.gridOption.columnData = value
-      this.isLoadGrid = true
+    $route (to, from) {
+      this.initInfo()
+      this.$refs.xGrid.commitProxy('query')
+      // this.$refs.xGrid.refreshColumn()
     }
   }
 }
+
 </script>
 
 <style scoped>

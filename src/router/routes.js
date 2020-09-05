@@ -23,13 +23,8 @@ export default async function setroute () {
           meta: { title: '功能管理', name: 'funManage' }
         },
         {
-          path: '/test',
-          component: () => import('pages/tableManage'),
-          meta: { title: '测试' }
-        },
-        {
           path: '/table/:name',
-          component: () => import('pages/tableManage2'),
+          component: () => import('pages/tableManage'),
           meta: { title: '数据管理' },
           props: { subtitle: ' ' }
         },
