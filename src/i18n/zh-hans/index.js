@@ -2,12 +2,13 @@ export default {
   Loading: 'Loading',
   successfulinitdata: '初始化成功,请刷新浏览器',
   add: '添加',
+  update: '更新',
   save: '保存',
   type: '类型',
   askSelect: '请选择',
   // dataStruct
-  leafNode: '叶子节点',
-  nonLeafNode: '非叶子节点',
+  leafNode: '叶节点',
+  nonLeafNode: '根节点',
   // funcMange
   dataSource: '数据源',
   funcName: '功能名',

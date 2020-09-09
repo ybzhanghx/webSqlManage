@@ -3,7 +3,7 @@
     <ul>
       <li :class="{'active': isActive(item.path)}" :key="index" class="tags-li" v-for="(item,index) in tagsList">
         <router-link :to="item.path" class="tags-li-title">
-          {{item.title}}
+          {{ GetTagName(item)}}
         </router-link>
         <span @click="closeTags(index)" class="tags-li-icon"><i class="el-icon-close"></i></span>
       </li>
@@ -57,7 +57,12 @@ export default {
       })
       this.tagsList = curItem
     },
-    GetTagName (routePath) {
+    GetTagName (item) {
+      console.log(item)
+      const routePath = item.path
+      if (routePath === '/funManage') {
+        return item.title
+      }
       const isTable = routePath.indexOf('/table/')
       let getValue = ''
       if (isTable < 0) {
@@ -69,7 +74,7 @@ export default {
       if (isEmpty >= 0) {
         getValue = routePath.slice(7)
       }
-      return this.$store.getters.getNameByValue(getValue)
+      return this.$store.getters.getNameByValue(getValue).getNode.name
     },
     // 设置标签
     setTags (route) {
@@ -80,12 +85,12 @@ export default {
         if (this.tagsList.length >= 8) {
           this.tagsList.shift()
         }
-        const titleRes = this.GetTagName(route.fullPath)
-        const titleStr = titleRes.ok ? titleRes.getNode.name : route.meta.title
-        this.tagsList.push({
-          title: titleStr,
-          path: route.fullPath
-        })
+        const item = {
+          path: route.fullPath,
+          title: route.meta.title
+        }
+        item.title = this.GetTagName(item)
+        this.tagsList.push(item)
       }
       bus.$emit('tags', this.tagsList)
     },
@@ -98,8 +103,7 @@ export default {
       return this.tagsList.length > 0
     },
     tagNames () {
-      const getTree = this.$store.getters.getState
-      return getTree.children
+      return this.$store.getters.getAllLeafName
     }
   },
   watch: {

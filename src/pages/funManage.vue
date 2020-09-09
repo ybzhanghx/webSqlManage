@@ -14,11 +14,12 @@
       </div>
     </div>
 
-    <el-dialog :visible.sync="addVisible" :title="this.$t(this.DialogAction)" width="35%">
+    <el-dialog :visible.sync="funcSetVisible" :title="this.$t(this.DialogAction)" custom-class="el-dialog__body" >
 <!--      类型-->
+
       <el-form  label-width="80px" ref="form" size="medium" >
         <el-form-item :label="this.$t('type')">
-          <el-select v-model="selectTypeValue" :disabled="this.DialogAction !=='add'" style="width:30%" @change="TypeValueChoosed">
+          <el-select v-model="selectTypeValue" :disabled="this.DialogAction !=='add'" size="20" style="width:30%" @change="TypeValueChoosed">
             <el-option
               v-for="item in TypeSelectList"
               :key="item.value"
@@ -59,14 +60,15 @@
         </el-form-item>
       </el-form>
       <span class="dialog-footer" slot="footer">
-                <el-button @click="addVisible = false">取 消</el-button>
+                <el-button @click="funcSetVisible = false">取 消</el-button>
                 <el-button @click="dialogFun()" type="primary">确 定</el-button>
             </span>
     </el-dialog>
 
-    <el-dialog :visible.sync="editVisible" title="编辑" width="30%" z-index="50" height="75%">
-
+    <el-dialog :visible.sync="editConfVisible" title="编辑" width="30%" z-index="50" height="75%">
+      <el-tooltip class="item" effect="dark" content="keep: add,update,del" placement="top">
       <jsonE  v-bind:value="tableConfigJsonStr" @changed="getEditValue"  ></jsonE>
+      </el-tooltip>
       <span class="dialog-footer" slot="footer">
                 <el-button @click="resetSourceConfig() ">取 消</el-button>
                 <el-button @click="saveConfig()" type="primary">确 定</el-button>
@@ -93,6 +95,7 @@ export default {
       baseList: [],
       tableConfigJsonStr: '',
       tmpConfigValue: '',
+      editConfVisible: false, // 配置显示
       // start-- 添加框
       EditFuncName: '',
       selectTypeValue: {},
@@ -107,13 +110,11 @@ export default {
       }],
       selectDataSourceValue: {},
       selectParentValue: {},
-      addVisible: false,
-      setTmpValue: 0,
-      DialogAction: 'add',
-      editRow: {},
+      funcSetVisible: false, // 是否显示
+      setTmpValue: 0, // 根节点计数器
+      DialogAction: 'add', // 框 添加/编辑状态
+      editRow: {}, // 获取当前雪中行
       // end
-      editVisible: false,
-      editThisRow: {},
       gridOption: {
         // 表格唯一標識
         gridManagerName: 'test-gm',
@@ -156,7 +157,7 @@ export default {
   },
 
   created () {
-    this.addVisible = false
+    this.funcSetVisible = false
     this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
     getTableNames({ }).then(responseData => {
       for (const dbtb of responseData.Data) {
@@ -233,11 +234,11 @@ export default {
           this.tableConfig = parsedObject
         }
       }
-      this.editVisible = false
+      this.editConfVisible = false
     },
     resetSourceConfig () {
       this.tableConfigJsonStr = this.tmpConfigValue
-      this.editVisible = false
+      this.editConfVisible = false
     },
     getEditValue (newValue) {
       this.tableConfigJsonStr = newValue
@@ -255,7 +256,7 @@ export default {
     // 点击编辑行数据
     updateVisible (row) {
       this.editRow = row
-      this.addVisible = true
+      this.funcSetVisible = true
       this.DialogAction = 'update'
       this.selectTypeValue = row.type ? this.TypeSelectList[0] : this.TypeSelectList[1]
       this.selectDataSourceValue = row.funcKey.split('|')
@@ -285,12 +286,12 @@ export default {
       }
       this.tableConfigJsonStr = JSON.stringify(this.tableConfig, null, 2)
       this.tmpConfigValue = this.tableConfigJsonStr
-      this.editVisible = true
+      this.editConfVisible = true
       this.editRow = row
     },
     // 获取 easy-mock 的模拟数据
     addDialog () {
-      this.addVisible = true
+      this.funcSetVisible = true
       this.DialogAction = 'add'
       this.selectTypeValue = this.TypeSelectList[1]
       this.parentFuncList[0].disabled = true
@@ -330,7 +331,7 @@ export default {
         tmpNode.value = 'item' + String(this.setTmpValue)
       }
       this.$store.commit({ type: 'addNode', nodeData: { node: tmpNode, parent: parentDir } })
-      this.addVisible = false
+      this.funcSetVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
     },
     editFun () {
@@ -343,7 +344,7 @@ export default {
         newParentValue: this.selectParentValue.value
 
       })
-      this.addVisible = false
+      this.funcSetVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
     }
   }
@@ -354,6 +355,11 @@ export default {
   .handle-box {
     margin-bottom: 20px;
   }
+
+  .el-dialog__body{
+    height: 90%;
+  }
+
   .handle-select {
     width: 120px;
   }

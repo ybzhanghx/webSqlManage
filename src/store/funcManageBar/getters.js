@@ -20,3 +20,7 @@ export const getAllLeaf = state => {
 export const getNameByValue = (state) => (value) => {
   return findNode(state.funcTree, value)
 }
+
+export const getAllLeafName = (state) => () => {
+  return findLeaf(state.funcTree).map(item => { return item.name })
+}

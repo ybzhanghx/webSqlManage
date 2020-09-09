@@ -231,7 +231,7 @@ export default {
       const resData = data.map(item => {
         item.id = 0
         for (const fieldItem of this.columnData) {
-          if (fieldItem.data_type.indexOf('int') > 0) {
+          if (fieldItem.data_type.indexOf('int') >= 0) {
             item[fieldItem.field_name] = parseInt(item[fieldItem.field_name])
           }
         }
@@ -246,7 +246,11 @@ export default {
 
       const resData = data.map(item => {
         for (const fieldItem of this.columnData) {
-          if (fieldItem.data_type.indexOf('int') > 0 && fieldItem.data_type !== 'id') {
+          if (fieldItem.field_name === 'account_id') {
+            console.log(fieldItem)
+            console.log(fieldItem.data_type.indexOf('int'))
+          }
+          if (fieldItem.data_type.indexOf('int') >= 0 && fieldItem.data_type !== 'id') {
             item[fieldItem.field_name] = parseInt(item[fieldItem.field_name])
           }
         }
