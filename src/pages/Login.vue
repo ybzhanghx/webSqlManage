@@ -32,6 +32,9 @@
 </template>
 
 <script>
+import { getFuncList } from '../api/api'
+import { FuncTreeNode } from '../store/funcManageBar/common'
+
 export default {
   data: function () {
     return {
@@ -59,12 +62,39 @@ export default {
         if (valid) {
           this.$message.success('登录成功')
           localStorage.setItem('ms_username', this.param.username)
+          this.setFuncList()
           this.$router.push('/')
         } else {
           this.$message.error('请输入账号和密码')
           return false
         }
       })
+    },
+    async  setFuncList () {
+      try {
+        const res = await getFuncList()
+        if (res.Code !== 0) {
+          this.$message.error('not get')
+        }
+        console.log(res)
+        const funcTree = new FuncTreeNode('/', '/', false)
+        const FirstLevel = res.Data.Children.map(firstItem => {
+          const FirstRes = new FuncTreeNode(firstItem.Value, firstItem.Name, false)
+
+          const secondLevels = firstItem.Children.map(secondItem => {
+            return new FuncTreeNode(secondItem.Value, secondItem.Name, true)
+          })
+          FirstRes.setChildren(secondLevels)
+          return FirstRes
+        })
+        funcTree.setChildren(FirstLevel)
+        this.$store.commit({
+          type: 'InitTree',
+          tree: funcTree
+        })
+      } catch (e) {
+        this.$message.error('not get')
+      }
     }
   }
 }

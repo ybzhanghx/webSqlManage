@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <el-dialog :visible.sync="funcSetVisible" :title="this.$t(this.DialogAction)" custom-class="el-dialog__body" >
+    <el-dialog :visible.sync="funcSetVisible" :title="this.$t(this.DialogAction)"  >
 <!--      类型-->
 
       <el-form  label-width="80px" ref="form" size="medium" >
@@ -52,6 +52,7 @@
               :key="item.value"
               :label="item.label"
               :value="item"
+              size="medium"
               :disabled="item.disabled">
               <span style="float: left">{{ item.label }}</span>
               <!--              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
@@ -355,9 +356,31 @@ export default {
   .handle-box {
     margin-bottom: 20px;
   }
+  /*.customWidth{*/
+  /*  width:74%;*/
+  /* */
+  /*}*/
+  .pub_dialog {
+    display: flex;
+    justify-content: center;
+    align-items: Center;
+    overflow: hidden;
+    .el-dialog {
+      margin: 0 auto !important;
+      height: 90%;
+      overflow: hidden;
+      .el-dialog__body {
+        position: absolute;
+        left: 0;
+        top: 10px;
+        bottom: 0;
+        right: 0;
+        padding: 0;
+        z-index: 1;
+        overflow: hidden;
 
-  .el-dialog__body{
-    height: 90%;
+      }
+    }
   }
 
   .handle-select {

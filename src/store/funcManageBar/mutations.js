@@ -1,9 +1,5 @@
 import { addThisNode, findNode, removeNode } from 'src/store/funcManageBar/common'
 
-export const update = (state, newStateParam) => {
-  state.funcTree.child = newStateParam.newState
-}
-
 export const addNode = (state, newStateParam) => {
   const node = newStateParam.nodeData.node
   const parent = newStateParam.nodeData.parent
@@ -33,4 +29,9 @@ export const delNode = (state, param) => {
   }
   const node = nodeRes.getNode
   removeNode(state.funcTree, param.parentValue, node)
+}
+
+export const InitTree = (state, param) => {
+  // value, name, isLeaf, parentValue, newParentValue = param.value, param.name,
+  state.funcTree = param.tree
 }
