@@ -6,6 +6,7 @@ export default {
   save: '保存',
   type: '类型',
   askSelect: '请选择',
+  restore: '还原',
   // dataStruct
   leafNode: '叶节点',
   nonLeafNode: '根节点',

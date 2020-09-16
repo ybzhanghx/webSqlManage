@@ -24,3 +24,7 @@ export const getNameByValue = (state) => (value) => {
 export const getAllLeafName = (state) => () => {
   return findLeaf(state.funcTree).map(item => { return item.name })
 }
+
+export const getEmpty = (state) => () => {
+  return state.funcTree.children.length === 0
+}

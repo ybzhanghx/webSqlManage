@@ -2,7 +2,8 @@
   <div>
     <div class="container" >
       <div  >
-        <vxe-grid ref="xGrid" v-bind = "gridOptions"></vxe-grid>
+        <vxe-grid ref="xGrid" v-bind = "gridOptions" :row-class-name="insertTest" >
+        </vxe-grid>
       </div>
     </div>
   </div>
@@ -23,14 +24,16 @@ export default {
       tableName: 'test',
       colunmsData: {},
       gridOptions: {
+
         border: true, // 有边框
         resizable: true, // 可拖动列宽大小
         showHeaderOverflow: true,
         showOverflow: true, // 当内容过长时显示为省略号
-        highlightHoverRow: true,
+        highlightHoverRow: false,
         keepSource: true,
         id: 'full_edit_1',
         rowId: 'id',
+        // rowClassName: 'row-class-name',
         customConfig: {
           storage: true
         },
@@ -50,8 +53,9 @@ export default {
           buttons: [
             { code: 'insert_actived', name: '新增', icon: 'fa fa-plus' },
             // { code: 'delete', name: '直接删除', icon: 'fa fa-trash-o' },
-            { code: 'mark_cancel', name: '删除/取消', icon: 'fa fa-trash-o' },
-            { code: 'save', name: this.$t('save'), icon: 'fa fa-save', status: 'success' }
+            { code: 'mark_cancel', name: '删除/取消', icon: 'fas fa-trash-alt' },
+            { code: 'save', name: this.$t('restore'), icon: 'fa fa-undo' },
+            { code: 'save', name: this.$t('save'), icon: 'far fa-save', status: 'success' }
           ],
           refresh: true,
           // import: true,
@@ -98,11 +102,15 @@ export default {
     }
   },
   created () {
+    // this.$refs.xGrid.
     this.initInfo()
   },
   methods: {
     initInfo () {
       this.setColumns()
+    },
+    insertTest ({ row, rowIndex, $rowIndex }) {
+      return 'my_table_inserts'
     },
     async setColumns () {
       const tmpArr = this.$route.path.slice(7).split('|')
@@ -289,8 +297,12 @@ export default {
 }
 
 </script>
-
 <style scoped>
+
+  .my_table_inserts .is--new {
+    background-color:  #0000ff;
+  }
+
   .handle-box {
     margin-bottom: 20px;
   }
