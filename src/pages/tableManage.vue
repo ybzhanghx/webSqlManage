@@ -1,8 +1,9 @@
 <template>
   <div>
+
     <div class="container" >
       <div  >
-        <vxe-grid ref="xGrid" v-bind = "gridOptions" :row-class-name="insertTest" >
+        <vxe-grid ref="xGrid" v-bind = "gridOptions" @toolbar-button-click="toolbarButtonClickEvent" >
         </vxe-grid>
       </div>
     </div>
@@ -21,15 +22,12 @@ dayjs.extend(timezone)
 export default {
   data () {
     return {
-      tableName: 'test',
-      colunmsData: {},
       gridOptions: {
-
         border: true, // 有边框
         resizable: true, // 可拖动列宽大小
         showHeaderOverflow: true,
         showOverflow: true, // 当内容过长时显示为省略号
-        highlightHoverRow: false,
+        highlightHoverRow: true,
         keepSource: true,
         id: 'full_edit_1',
         rowId: 'id',
@@ -54,9 +52,10 @@ export default {
             { code: 'insert_actived', name: '新增', icon: 'fa fa-plus' },
             // { code: 'delete', name: '直接删除', icon: 'fa fa-trash-o' },
             { code: 'mark_cancel', name: '删除/取消', icon: 'fas fa-trash-alt' },
-            { code: 'save', name: this.$t('restore'), icon: 'fa fa-undo' },
+            { code: 'restore', name: this.$t('restore'), icon: 'fa fa-undo' },
             { code: 'save', name: this.$t('save'), icon: 'far fa-save', status: 'success' }
           ],
+
           refresh: true,
           // import: true,
           // export: true,
@@ -109,9 +108,6 @@ export default {
     initInfo () {
       this.setColumns()
     },
-    insertTest ({ row, rowIndex, $rowIndex }) {
-      return 'my_table_inserts'
-    },
     async setColumns () {
       const tmpArr = this.$route.path.slice(7).split('|')
       const res = await getTableConfig({ DB: tmpArr[0], TB: tmpArr[1] })
@@ -147,7 +143,7 @@ export default {
             type: 'number'
           }
         }
-        console.log(node)
+
         colCfg.push(tmp)
         if (node.is_able_null === false && node.data_type !== 'datetime') {
           ruleCfg[node.field_name] = [{ required: true, message: this.$t("can't is null") }]
@@ -255,8 +251,7 @@ export default {
       const resData = data.map(item => {
         for (const fieldItem of this.columnData) {
           if (fieldItem.field_name === 'account_id') {
-            console.log(fieldItem)
-            console.log(fieldItem.data_type.indexOf('int'))
+
           }
           if (fieldItem.data_type.indexOf('int') >= 0 && fieldItem.data_type !== 'id') {
             item[fieldItem.field_name] = parseInt(item[fieldItem.field_name])
@@ -273,19 +268,32 @@ export default {
       return data.map(v => {
         return v.id
       })
+    },
+    toolbarButtonClickEvent ({ code }) {
+      if (code === 'restore') {
+        this.$refs.xGrid.revertData()
+      }
     }
-    // formatAmount ({ cellValue }) {
-    //   return cellValue ? `$${XEUtils.commafy(XEUtils.toNumber(cellValue), { digits: 2 })}` : ''
-    // },
-    // formatDate ({ cellValue }) {
-    //   return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:ss:mm')
-    // },
-    // checkColumnMethod ({ column }) {
-    //   if (['nickname', 'role'].includes(column.property)) {
-    //     return false
-    //   }
-    //   return true
-    // },
+  },
+  beforeRouteUpdate (to, from, next) {
+    console.log('233')
+    // this.LeaveDialog.visible = true
+    const arrSta = this.$refs.xGrid.getRecordset()
+    const funcIsEmpty = (v) => { if (v.length === 0) return true }
+    if (funcIsEmpty(arrSta.insertRecords) && funcIsEmpty(arrSta.updateRecords) && funcIsEmpty(arrSta.removeRecords)) {
+      next()
+      return
+    }
+
+    this.$confirm('放弃当前未保存内容而关闭页面？', '未保存', {
+      confirmButtonText: '离开',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      next()
+    }).catch((v) => {
+      next(false)
+    })
   },
   watch: {
     $route (to, from) {
@@ -298,10 +306,6 @@ export default {
 
 </script>
 <style scoped>
-
-  .my_table_inserts .is--new {
-    background-color:  #0000ff;
-  }
 
   .handle-box {
     margin-bottom: 20px;

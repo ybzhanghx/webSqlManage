@@ -50,5 +50,6 @@ export default {
       this.tagsList = arr
     })
   }
+
 }
 </script>

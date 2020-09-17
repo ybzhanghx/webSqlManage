@@ -58,7 +58,6 @@ export default {
       this.tagsList = curItem
     },
     GetTagName (item) {
-      console.log(item)
       const routePath = item.path
       if (routePath === '/funManage') {
         return item.title
