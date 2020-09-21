@@ -9,10 +9,21 @@ export default async function setroute () {
   // })
   const routes = [
     {
+      path: '/login',
+      component: () => import('pages/Login'),
+      // component: () => import('layouts/MainLayout.vue'),
+      meta: { title: '登录' }
+    },
+    {
+      path: '/connect',
+      component: () => import('pages/connect'),
+      // component: () => import('layouts/MainLayout.vue'),
+      meta: { title: '连接' }
+    },
+    {
       path: '/',
       redirect: '/funManage'
     },
-
     {
       path: '/',
       component: () => import('../components/Home'),
@@ -34,12 +45,7 @@ export default async function setroute () {
         }
       ]
     },
-    {
-      path: '/login',
-      component: () => import('pages/Login'),
-      // component: () => import('layouts/MainLayout.vue'),
-      meta: { title: '登录' }
-    },
+
     // component: () => import('layouts/MainLayout.vue'),
     // children: [
     //   { path: '', component: () => import('pages/Index.vue') }

@@ -5,6 +5,11 @@
       <div class="ms-login">
         <div class="ms-title">后台管理系统</div>
         <el-form :model="param" :rules="rules" class="ms-content" label-width="0px" ref="login">
+          <el-form-item prop="addr">
+            <el-input placeholder="addr" v-model="param.addr">
+              <el-button icon="el-icon-lx-people" slot="prepend"></el-button>
+            </el-input>
+          </el-form-item>
           <el-form-item prop="username">
             <el-input placeholder="username" v-model="param.username">
               <el-button icon="el-icon-lx-people" slot="prepend"></el-button>
@@ -21,9 +26,9 @@
             </el-input>
           </el-form-item>
           <div class="login-btn">
-            <el-button @click="submitForm()" type="primary">登录</el-button>
+            <el-button @click="submitForm()" type="primary">连接</el-button>
           </div>
-          <p class="login-tips">Tips : 用户名和密码随便填。</p>
+          <p class="login-tips"></p>
         </el-form>
       </div>
     </div>
@@ -32,25 +37,21 @@
 </template>
 
 <script>
-import { getFuncList } from '../api/api'
+import { ConnectMysql, getFuncList } from '../api/api'
 import { FuncTreeNode } from '../store/funcManageBar/common'
 
 export default {
   data: function () {
     return {
       param: {
-        username: 'admin',
-        password: '123123'
+        addr: '192.168.1.88:3306',
+        username: 'root',
+        password: 'blroot654321@'
       },
       rules: {
         username: [{
           required: true,
           message: '请输入用户名',
-          trigger: 'blur'
-        }],
-        password: [{
-          required: true,
-          message: '请输入密码',
           trigger: 'blur'
         }]
       }
@@ -58,12 +59,23 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs.login.validate(valid => {
+      this.$refs.login.validate(async valid => {
         if (valid) {
-          this.$message.success('登录成功')
-          localStorage.setItem('ms_username', this.param.username)
-          // this.setFuncList()
-          this.$router.push('/connect')
+          const p = this.param
+          const resConnectMysql = await ConnectMysql({
+            Addr: p.addr,
+            User: p.username,
+            Pwd: p.password
+          })
+          if (resConnectMysql.Code === 0) {
+            this.$message.success('连接成功')
+            // localStorage.setItem('ms_username', this.param.username)
+            this.setFuncList()
+            this.$router.push('/')
+          } else {
+            this.$message.error('连接失败')
+            return false
+          }
         } else {
           this.$message.error('请输入账号和密码')
           return false

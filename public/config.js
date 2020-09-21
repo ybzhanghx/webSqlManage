@@ -15,5 +15,5 @@ window.g = {
     BASE_API_URL: 'http://47.113.92.166:8083',
     IDLE_TIME: 10
   },
-  chooseEnv: 'prod'
+  chooseEnv: 'test'
 }
