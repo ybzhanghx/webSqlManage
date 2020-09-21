@@ -90,7 +90,7 @@ module.exports = function (/* ctx */) {
       //   }
       // },
       https: false,
-      port: 8089,
+      port: 8091,
       open: true // opens browser window automatically
     },
 

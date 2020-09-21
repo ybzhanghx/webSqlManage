@@ -124,7 +124,9 @@ export default {
         }
       ]
       const ruleCfg = {}
-
+      if (res.Data === null) {
+        return
+      }
       for (const node of res.Data) {
         if (node.field_name.toLowerCase() === 'id') { continue }
         const tmp = {

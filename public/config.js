@@ -1,13 +1,19 @@
-
-const WConfig = {
-  prod: {
+window.g = {
+  test: {
     BASE_API_URL: 'http://localhost:8095',
     IDLE_TIME: 10
   },
-  test: {
+  test2: {
     BASE_API_URL: 'http://192.168.10.18:8095',
     IDLE_TIME: 10
   },
-  chooseEnv: 'test'
+  prod: {
+    BASE_API_URL: 'http://47.115.123.121:8083',
+    IDLE_TIME: 10
+  },
+  prod2: {
+    BASE_API_URL: 'http://47.113.92.166:8083',
+    IDLE_TIME: 10
+  },
+  chooseEnv: 'prod'
 }
-export default WConfig

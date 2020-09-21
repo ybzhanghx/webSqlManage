@@ -1,7 +1,7 @@
 import { fetch } from 'boot/axios'
 
-import WConfig from '../../public/config'
-
+// import WConfig from '../../public/config'
+const WConfig = window.g
 const chooseEnv = WConfig.chooseEnv
 
 const useConfig = WConfig[chooseEnv]
