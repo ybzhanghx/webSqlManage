@@ -83,7 +83,7 @@
 import GridManager from 'gridmanager-vue'
 import 'gridmanager-vue/css/gm-vue.css'
 import jsonE from '../components/tableJsonConfig'
-import { getTableConfig, getTableNames, UpdateTableConfig } from '../api/api'
+import { getFuncList, getTableConfig, getTableNames, UpdateTableConfig } from '../api/api'
 import { FuncTreeNode } from '../store/funcManageBar/common'
 import TableDataRow from '../common/funcManage'
 export default {
@@ -177,6 +177,7 @@ export default {
       }
     }
     )
+    this.setFuncList()
   },
   computed: {
     tableData: function () {
@@ -347,6 +348,35 @@ export default {
       })
       this.funcSetVisible = false
       GridManager.refreshGrid(this.gridOption.gridManagerName)
+    },
+    async  setFuncList () {
+      try {
+        const res = await getFuncList()
+        if (res.Code !== 0) {
+          this.$message.error('not get')
+        }
+        console.log(res)
+        const funcTree = new FuncTreeNode('/', '/', false)
+        const FirstLevel = res.Data.Children.map(firstItem => {
+          const FirstRes = new FuncTreeNode(firstItem.Value, firstItem.Name, false)
+
+          const secondLevels = firstItem.Children.map(secondItem => {
+            return new FuncTreeNode(secondItem.Value, secondItem.Name, true)
+          })
+          FirstRes.setChildren(secondLevels)
+          return FirstRes
+        })
+        funcTree.setChildren(FirstLevel)
+        this.$store.commit({
+          type: 'InitTree',
+          tree: funcTree
+        })
+        if (this.tableData.totals === 0) {
+          GridManager.refreshGrid(this.gridOption.gridManagerName)
+        }
+      } catch (e) {
+        this.$message.error('not get')
+      }
     }
   }
 }

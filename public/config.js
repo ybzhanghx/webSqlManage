@@ -1,6 +1,6 @@
 window.g = {
   test: {
-    BASE_API_URL: 'http://localhost:8095',
+    BASE_API_URL: 'http://localhost:8180',
     IDLE_TIME: 10
   },
   test2: {

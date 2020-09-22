@@ -1,12 +1,4 @@
 export default async function setroute () {
-  // const res = await getTableNames({ db: 'TradeFxDB' })
-  // const tmpChildren = res.Data.map(item => {
-  //   return {
-  //     path: '/table/:tableName' + item,
-  //     component: () => import('pages/tableManage'),
-  //     meta: { title: item }
-  //   }
-  // })
   const routes = [
     {
       path: '/login',
@@ -45,13 +37,6 @@ export default async function setroute () {
         }
       ]
     },
-
-    // component: () => import('layouts/MainLayout.vue'),
-    // children: [
-    //   { path: '', component: () => import('pages/Index.vue') }
-
-    // Always leave this as last one,
-    // but you can also remove it
     {
       path: '*',
       component: () => import('pages/Error404.vue')
@@ -59,14 +44,3 @@ export default async function setroute () {
   console.log(routes)
   return routes
 }
-
-// getTableNames('TradeFxDB').then(res => {
-//   tmpChildren = res.Data.map(item => {
-//     return {
-//       path: '/' + item,
-//       component: () => import('pages/tableManage'),
-//       meta: { title: item }
-//     }
-//   })
-//
-// })

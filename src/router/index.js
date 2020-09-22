@@ -5,16 +5,6 @@ import setroute from './routes'
 
 Vue.use(VueRouter)
 
-// Vue.use(GridManager)
-
-// Vue.use(VueI18n)
-// const i18n = new VueI18n({
-//   locale: 'zh',
-//   messages
-// })
-// console.log(i18n)
-// console.log('233')
-
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
