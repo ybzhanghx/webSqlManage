@@ -1,6 +1,9 @@
+web端的mysql 可视化查看界面（前端）
+
+使用quasar 框架
 # Quasar App (manage_qa)
 
-A Quasar Framework app
+Quasar Framework app
 
 ## Install the dependencies
 ```bash
@@ -22,5 +25,3 @@ yarn run lint
 quasar build
 ```
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
