@@ -176,6 +176,9 @@ export default {
       const funcValidTime = (obj) => {
         return obj.Valid ? parseTimeFunc(obj.TimeStamp) : ''
       }
+      const funcValidInt64 = (obj) => {
+        return obj.Valid ? obj.Int64 : ''
+      }
       tmp.result = getData.map(item => {
         for (const fieldItem of responseData.Fields) {
           if (fieldItem.AbleNull) {
@@ -183,6 +186,7 @@ export default {
             switch (fieldItem.TypeName) {
               case 'time': parseFunc = funcValidTime; break
               case 'string':parseFunc = funcValidStr; break
+              case 'int':parseFunc = funcValidInt64; break
             }
             const tmpV = parseFunc(item[fieldItem.FieldName])
             item[fieldItem.FieldName] = tmpV

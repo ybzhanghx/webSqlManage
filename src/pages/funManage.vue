@@ -126,7 +126,7 @@ export default {
         columnData: [
           {
             key: 'funcName',
-            text: this.$t('funcName'),
+            text: '数据名',
             align: 'center'
           }, {
             key: 'parentName',
