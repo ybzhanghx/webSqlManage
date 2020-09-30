@@ -177,7 +177,7 @@ export default {
       }
     }
     )
-    this.setFuncList()
+    // this.setFuncList()
   },
   computed: {
     tableData: function () {
@@ -307,6 +307,9 @@ export default {
     },
     async setTableData (page_, size_) {
       const tmp = {}
+      if (this.tableData.totals === 0) {
+        await this.setFuncList()
+      }
       tmp.data = this.tableData.data.slice((page_ - 1) * size_, page_ * size_)
       tmp.totals = this.tableData.totals
       return tmp
@@ -355,7 +358,6 @@ export default {
         if (res.Code !== 0) {
           this.$message.error('not get')
         }
-        console.log(res)
         const funcTree = new FuncTreeNode('/', '/', false)
         const FirstLevel = res.Data.Children.map(firstItem => {
           const FirstRes = new FuncTreeNode(firstItem.Value, firstItem.Name, false)
@@ -371,9 +373,6 @@ export default {
           type: 'InitTree',
           tree: funcTree
         })
-        if (this.tableData.totals === 0) {
-          GridManager.refreshGrid(this.gridOption.gridManagerName)
-        }
       } catch (e) {
         this.$message.error('not get')
       }

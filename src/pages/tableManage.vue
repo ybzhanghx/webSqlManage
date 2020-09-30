@@ -79,7 +79,6 @@ export default {
               console.log(body)
             },
             save: ({ body }) => {
-              console.log(body)
               return this.saveData(body)
             }
           }
@@ -282,8 +281,6 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    console.log('233')
-    // this.LeaveDialog.visible = true
     const arrSta = this.$refs.xGrid.getRecordset()
     const funcIsEmpty = (v) => { if (v.length === 0) return true }
     if (funcIsEmpty(arrSta.insertRecords) && funcIsEmpty(arrSta.updateRecords) && funcIsEmpty(arrSta.removeRecords)) {

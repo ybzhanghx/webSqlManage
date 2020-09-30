@@ -41,6 +41,5 @@ export default async function setroute () {
       path: '*',
       component: () => import('pages/Error404.vue')
     }]
-  console.log(routes)
   return routes
 }
